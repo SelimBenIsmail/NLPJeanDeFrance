@@ -8,26 +8,22 @@ text <- dataImported
 regex  <- "\\{[0-9]+\\}"
 text <- str_remove(text, regex)
 
-## capture des connetablies ##
-regex <- "[1-9]+°"
-connetablieNum <- grep(regex,text,value=FALSE)
+## capture du rang des voies ##
 regex <- "^[AB]$"
-RdVNum <- grep(regex,text,value=FALSE)
+indexRdV <- grep(regex,text,value=FALSE)
+
 result <- NULL
-for (j in connetablieNum){
-  connetablie <- NULL
-  RdVMark <- which(RdVNum >= j)[1]
-  
-  beg <- j+1 
-  end <- RdVNum[RdVMark]-1
-  
-  if(!is.na(end)) {
-    for (i in text[beg:end]) {
-      connetablie <- str_c(connetablie,i," ")
-    }
-    result <- c(result,connetablie)
+for (j in indexRdV){
+  section <- NULL
+  beg <- j+1
+  end <- (indexRdV[(which(indexRdV==j))+1])-1
+  if(is.na(end)) {
+    end <- length(text)
   }
-  
+  for (i in text[beg:end]) {
+    section <- str_c(section,i," ")
+  }
+  result <- c(result,section)
 }
 
 print (result)
