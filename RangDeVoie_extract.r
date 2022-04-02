@@ -1,5 +1,6 @@
 setwd(dir="~/Rprojects/R_db_test")
 library(stringr)
+source("functions_seg.R")
 ## Setting ##
 dataImported <- scan(file = "extrait_p37_p57.txt", what = "string")
 text <- dataImported
