@@ -16,12 +16,9 @@ text <-  text[-tirets]
 ## capture des numeros de rentes consécutives ##
 regex <- "[0-9]+\\."
 numRente <-  str_subset(text,regex)
-#numRente <- strtoi(str_replace(result,"\\.",""))
-#print(numRente)
 
 ## capture des sections de chaque rentes ##
 indexRente <- grep(regex,text,value=FALSE)
-#print(indexRente)
 result <- NULL
 for (j in indexRente){
   sentence <- ""
@@ -36,6 +33,7 @@ for (j in indexRente){
   result <- c(result,sentence)
   print (result)
 }
+df_rente = data.frame(numRente,result)
 
 
 

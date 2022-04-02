@@ -11,6 +11,7 @@ text <- str_remove(text, regex)
 ## capture du rang des voies ##
 regex <- "^[AB]$"
 indexRdV <- grep(regex,text,value=FALSE)
+RdV <- grep(regex,text,value=TRUE)
 
 result <- NULL
 for (j in indexRdV){
@@ -26,5 +27,5 @@ for (j in indexRdV){
   result <- c(result,section)
 }
 
-print (result)
+df = data.frame(RdV, result)
 

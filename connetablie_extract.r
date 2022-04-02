@@ -10,16 +10,17 @@ text <- str_remove(text, regex)
 
 ## capture des connetablies ##
 regex <- "[1-9]+°"
-connetablieNum <- grep(regex,text,value=FALSE)
+numConnetablie <- grep(regex,text,value=TRUE)
+indexConnetablie <- grep(regex,text,value=FALSE)
 regex <- "^[AB]$"
-RdVNum <- grep(regex,text,value=FALSE)
+indexRdV <- grep(regex,text,value=FALSE)
 result <- NULL
-for (j in connetablieNum){
+for (j in indexConnetablie){
   connetablie <- NULL
-  RdVMark <- which(RdVNum >= j)[1]
+  RdVMark <- which(indexRdV >= j)[1]
   
   beg <- j+1 
-  end <- RdVNum[RdVMark]-1
+  end <- indexRdV[RdVMark]-1
   
   if(!is.na(end)) {
     for (i in text[beg:end]) {
@@ -27,8 +28,11 @@ for (j in connetablieNum){
     }
     result <- c(result,connetablie)
   }
-  
 }
-
-print (result)
+## Données en sous forme de Dataframe ##
+if(length(numConnetablie == length(result)+1)){
+  numConnetablie= numConnetablie[-length(numConnetablie)]
+}
+  
+df_connetablie =  data.frame(numConnetablie,result)
 
