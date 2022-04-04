@@ -11,3 +11,6 @@ text <- str_remove(text, regex)
 
 df <- data.frame(numEscroete = NULL,numConnetablie = NULL, numRente = NULL)
 
+
+
+
