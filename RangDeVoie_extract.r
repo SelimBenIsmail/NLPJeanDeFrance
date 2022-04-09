@@ -1,4 +1,4 @@
-setwd(dir="~/Rprojects/R_db_test")
+setwd(dir="~/Rprojects/NLPJeanDeFrance")
 library(stringr)
 library(plyr)
 source("functions_seg.R")
@@ -14,7 +14,6 @@ text <- str_remove(text, regex)
 regex <- "^[AB]$"
 indexRdV <- grep(regex,text,value=FALSE)
 RdV <- grep(regex,text,value=TRUE)
-df = data.frame("rdv" = NULL, "numRente" = NULL, "rente" = NULL)
 result <- NULL
 for (j in indexRdV){
   section <- NULL
@@ -29,6 +28,7 @@ for (j in indexRdV){
   result <- c(result,section)
 }
 
+df = data.frame("rdv" = NULL, "numRente" = NULL, "rente" = NULL)
 df_rdv = data.frame(RdV, result) #dataframe contenant la section pour chaque Rang de voie
 df_rentes = data.frame()
 

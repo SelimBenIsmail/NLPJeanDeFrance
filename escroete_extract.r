@@ -1,4 +1,4 @@
-setwd(dir="~/Rprojects/R_db_test")
+setwd(dir="~/Rprojects/NLPJeanDeFrance")
 library(stringr)
 source("functions_seg.R")
 ## Setting ##
