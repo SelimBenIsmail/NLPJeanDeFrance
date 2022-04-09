@@ -1,4 +1,4 @@
-##function to extract a list of rent contain in a text
+####function to extract a list of rent contain in a text ####
 renteExtract <- function(text){
   regex <- "\\-"
   tirets <- grep(regex, text, value=FALSE)
@@ -22,7 +22,7 @@ renteExtract <- function(text){
   return(df= data.frame(numRente,result))
 }
 
-## capture du rang des voies ##
+#### capture du rang des voies ####
 rdvExtract <- function (text){
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
@@ -58,34 +58,66 @@ rdvExtract <- function (text){
 
 
 
-## capture des connetablies ##
+#### capture des connetablies ####
 connetablieExtract <- function(text){
-  regex <- "[1-9]+°"
+  regex <- "[0-9]+°"
   numConnetablie <- grep(regex,text,value=TRUE)
   indexConnetablie <- grep(regex,text,value=FALSE)
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
-  result <- NULL
+  v_connetablie <- NULL
+  v_section <- NULL
+  
   for (j in indexConnetablie){
     connetablie <- NULL
     RdVMark <- which(indexRdV >= j)[1]
+    
     beg <- j+1 
     end <- indexRdV[RdVMark]-1
+    
     if(!is.na(end)) {
       for (i in text[beg:end]) {
         connetablie <- str_c(connetablie,i," ")
       }
-      result <- c(result,connetablie)
+      v_connetablie <- c(v_connetablie,connetablie)
     }
   }
-  if(length(numConnetablie == length(result)+1)){
-    numConnetablie= numConnetablie[-length(numConnetablie)]
+  
+  for (j in indexConnetablie){
+    section <- NULL
+    beg <- j+1 
+    end <- (indexConnetablie[which(indexConnetablie==j)+1])-1
+    if(is.na(end)) {
+      end <- length(text)
+    }
+    if(!is.na(end)) {
+      for (i in text[beg:end]) {
+        section <- str_c(section,i," ")
+      }
+      v_section <- c(v_section,section)
+    }
   }
-  return(df = data.frame(numConnetablie,result))
+  
+  ## Données en sous forme de Dataframe ##
+  if(length(numConnetablie == length(v_connetablie)+1)){
+    df_connetablie =  data.frame(numConnetablie[1:length(numConnetablie)-1],v_connetablie ,v_section[1:length(numConnetablie)-1])
+  } else df_connetablie =  data.frame(numConnetablie, v_connetablie, v_section)
+  names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
+  
+  ## extraction des rangs de voie  pour chaque connetablie ##
+  df = data.frame()
+  for (i in 1:nrow(df_connetablie)) {
+    t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
+    for (j in 1:nrow(t)) {
+      df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
+    }
+  }
+  
+  return(df)
 }
 
 
-## capture des escroetes ##
+#### capture des escroetes ####
 escroeteExtract <- function(text){
   regex <- "[IVXLCM]+[1-9]"
   numEscroete <- grep(regex,text,value=FALSE)
