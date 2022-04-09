@@ -43,16 +43,13 @@ rdvExtract <- function (text){
   
   df = data.frame()
   df_rdv = data.frame(RdV, result) #dataframe contenant la section pour chaque Rang de voie
-  df_rentes = data.frame()
-  
   for (i in 1:nrow(df_rdv)) {
     t  <- renteExtract(unlist(str_split(df_rdv$result[i], " ")))
     for (j in 1:nrow(t)) {
       df <- rbind(df, c(df_rdv$RdV[i],t$numRente[j], t$result[j]))
     }
-    #df_rentes <- rbind(df_rentes, t)#df cumulant toutes les rentes. A affeccter à un dataframe global
+    df_rentes <<- rbind(df_rentes, t)#df cumulant toutes les rentes. A affeccter à un dataframe global
   }
-  #names(df)[1:3] <- c("rdv", "numRente", "rente")
   return(df)
 }
 
@@ -100,7 +97,7 @@ connetablieExtract <- function(text){
   
   ## Données en sous forme de Dataframe ##
   if(length(numConnetablie == length(v_connetablie)+1)){
-    df_connetablie =  data.frame(numConnetablie[1:length(numConnetablie)-1],v_connetablie ,v_section[1:length(numConnetablie)-1])
+    df_connetablie =  data.frame(numConnetablie[1:length(numConnetablie)-1],v_connetablie[1:length(numConnetablie)-1] ,v_section[1:length(numConnetablie)-1])
   } else df_connetablie =  data.frame(numConnetablie, v_connetablie, v_section)
   names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
   
@@ -120,19 +117,54 @@ connetablieExtract <- function(text){
 #### capture des escroetes ####
 escroeteExtract <- function(text){
   regex <- "[IVXLCM]+[1-9]"
-  numEscroete <- grep(regex,text,value=FALSE)
-  regex <- "[0-9]+°"
+  indexEscroete <- grep(regex,text,value=FALSE)
+  numEscroete <- grep(regex,text,value=TRUE)
+  regex <- "[1-9]+°"
   indexConnetablie <- grep(regex,text,value=FALSE)
-  result <- NULL
-  for (j in numEscroete){
+  v_escroete <- NULL
+  v_section <- NULL
+  for (j in indexEscroete){
+    
     escroete <- NULL
     connetablieMark <- which(indexConnetablie >= j)[1]
+    
     beg <- j+1 
     end <- indexConnetablie[connetablieMark]-1
+    
     for (i in text[beg:end]) {
       escroete <- str_c(escroete,i," ")
     }
-    result <- c(result,escroete)
+    v_escroete <- c(v_escroete,escroete)
   }
-  return(df = data.frame(numEscroete,result))
+  
+  for (j in indexEscroete){
+    section <- NULL
+    beg <- j+1 
+    end <- (indexEscroete[which(indexEscroete==j)+1])-1
+    if(is.na(end)) {
+      end <- length(text)
+    }
+    for (i in text[beg:end]) {
+      section <- str_c(section,i," ")
+    }
+    v_section <- c(v_section,section)
+  }
+  ## Données en sous forme de Dataframe ##
+  df_escroete = data.frame(numEscroete,v_escroete,v_section)
+  names(df_escroete)[1:3] <- c("numEscroete", "escroete", "section")
+  
+  ## extraction des connetablies pour chaque escroete##
+  df = data.frame()
+  for (i in 1:nrow(df_escroete)) {
+    t  <- connetablieExtract(unlist(str_split(df_escroete$section[i], " ")))
+    for (j in 1:nrow(t)) {
+      df <- rbind(df, c(df_escroete$numEscroete[i],df_escroete$escroete[i],t[j,1], t[j,2],t[j,3],t[j,4],t[j,5]))
+    }
+  }
+  return(df)
+}
+
+#### extraction complete ####
+fullExtract <- function(text){
+  return (escroeteExtract(text))
 }

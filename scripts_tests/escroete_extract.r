@@ -43,7 +43,18 @@ for (j in indexEscroete){
   }
   v_section <- c(v_section,section)
 }
+## Données en sous forme de Dataframe ##
 df_escroete = data.frame(numEscroete,v_escroete,v_section)
+names(df_escroete)[1:3] <- c("numEscroete", "escroete", "section")
 
+## extraction des connetablies pour chaque escroete##
+df = data.frame()
+for (i in 1:nrow(df_escroete)) {
+  t  <- connetablieExtract(unlist(str_split(df_escroete$section[i], " ")))
+  for (j in 1:nrow(t)) {
+    df <- rbind(df, c(df_escroete$numEscroete[i],df_escroete$escroete[i],t[j,1], t[j,2],t[j,3],t[j,4],t[j,5]))
+  }
+}
 
+names(df)[1:7] <- c("numEscroete", "escroete", "numConnetablie", "connetablie", "rdv", "numRente","rente")
 
