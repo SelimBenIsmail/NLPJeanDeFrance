@@ -11,12 +11,13 @@ text <- str_remove(text, regex)
 
 ## capture des escroetes ##
 regex <- "[IVXLCM]+[1-9]"
-numEscroete <- grep(regex,text,value=FALSE)
+indexEscroete <- grep(regex,text,value=FALSE)
+numEscroete <- grep(regex,text,value=TRUE)
 regex <- "[1-9]+°"
 indexConnetablie <- grep(regex,text,value=FALSE)
-
-result <- NULL
-for (j in numEscroete){
+v_escroete <- NULL
+v_section <- NULL
+for (j in indexEscroete){
   
   escroete <- NULL
   connetablieMark <- which(indexConnetablie >= j)[1]
@@ -27,11 +28,22 @@ for (j in numEscroete){
   for (i in text[beg:end]) {
     escroete <- str_c(escroete,i," ")
   }
-  result <- c(result,escroete)
+  v_escroete <- c(v_escroete,escroete)
 }
 
-df = data.frame(numEscroete,result)
+for (j in indexEscroete){
+  section <- NULL
+  beg <- j+1 
+  end <- (indexEscroete[which(indexEscroete==j)+1])-1
+  if(is.na(end)) {
+    end <- length(text)
+  }
+  for (i in text[beg:end]) {
+    section <- str_c(section,i," ")
+  }
+  v_section <- c(v_section,section)
+}
+df_escroete = data.frame(numEscroete,v_escroete,v_section)
 
-print (result)
 
 
