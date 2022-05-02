@@ -19,7 +19,9 @@ renteExtract <- function(text){
     }
     result <- c(result,sentence)
   }
-  return(df= data.frame(numRente,result))
+  df = data.frame(numRente,result)
+  df_rentes <<- rbind(df_rentes, df)#df cumulant toutes les rentes. A affeccter à un dataframe global
+  return(df)
 }
 
 #### capture du rang des voies ####
@@ -48,7 +50,6 @@ rdvExtract <- function (text){
     for (j in 1:nrow(t)) {
       df <- rbind(df, c(df_rdv$RdV[i],t$numRente[j], t$result[j]))
     }
-    df_rentes <<- rbind(df_rentes, t)#df cumulant toutes les rentes. A affeccter à un dataframe global
   }
   return(df)
 }
@@ -100,6 +101,7 @@ connetablieExtract <- function(text){
     df_connetablie =  data.frame(numConnetablie[1:length(numConnetablie)-1],v_connetablie[1:length(numConnetablie)-1] ,v_section[1:length(numConnetablie)-1])
   } else df_connetablie =  data.frame(numConnetablie, v_connetablie, v_section)
   names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
+  df_connetablies <<- rbind(df_connetablies,df_connetablie[1:2])#df cumulant toutes les connetablie. dataframe global
   
   ## extraction des rangs de voie  pour chaque connetablie ##
   df = data.frame()
@@ -152,6 +154,7 @@ escroeteExtract <- function(text){
   ## Données en sous forme de Dataframe ##
   df_escroete = data.frame(numEscroete,v_escroete,v_section)
   names(df_escroete)[1:3] <- c("numEscroete", "escroete", "section")
+  df_escroetes <<- rbind(df_escroetes,df_escroete[1:2])#df cumulant toutes les connetablie. dataframe global
   
   ## extraction des connetablies pour chaque escroete##
   df = data.frame()

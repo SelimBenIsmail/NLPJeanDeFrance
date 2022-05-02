@@ -7,6 +7,7 @@ source("functions_Seg.R")
 ## Input ##
 dataImported <- scan(file = "./sources/extrait_p37_p57.txt", what = "string")
 text <- dataImported
+
 ## suppression des numéros de pages ##
 regex  <- "\\{[0-9]+\\}"
 text <- str_remove(text, regex)
@@ -15,6 +16,7 @@ text <- str_remove(text, regex)
 df_rentes = data.frame()
 df_connetablies = data.frame()
 df_escroetes = data.frame()
+
 df_main <- fullExtract(text)
 names(df_main)[1:7] <- c("numEscroete", "escroete", "numConnetablie", "connetablie", "rdv", "numRente","rente")
 
