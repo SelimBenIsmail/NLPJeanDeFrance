@@ -1,8 +1,8 @@
 ## Setting ##
 setwd(dir="~/Rprojects/NLPJeanDeFrance")
 library(stringr)
-source("function_Seg.R")
-dataImported <- scan(file = "extrait_p37_p57.txt", what = "string")
+source("functions_Seg.R")
+dataImported <- scan(file = "sources/extrait_p37_p57.txt", what = "string")
 dataText<- dataImported
 
 ## suppression des numéros de pages ##
