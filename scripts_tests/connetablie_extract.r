@@ -2,8 +2,9 @@ setwd(dir="~/Rprojects/NLPJeanDeFrance")
 library(stringr)
 source("functions_seg.R")
 ## Setting ##
-dataImported <- scan(file = "extrait_p37_p57.txt", what = "string")
+dataImported <- scan(file = "sources/extrait_p37_p57.txt", what = "string")
 text <- dataImported
+df_rentes = data.frame()
 
 ## suppression des numéros de pages ##
 regex  <- "\\{[0-9]+\\}"
@@ -11,8 +12,15 @@ text <- str_remove(text, regex)
 
 ## capture des connetablies ##
 regex <- "[0-9]+°"
-numConnetablie <- grep(regex,text,value=TRUE)
 indexConnetablie <- grep(regex,text,value=FALSE)
+#fusion des elements "bis" du vecteur au numero de connetablie
+for(i in indexConnetablie){ 
+  if(text[i+1]=="bis"){
+    text[i] <- str_c(text[i],"bis", sep=" ")
+    text <- text[-(i+1)]
+  }
+}
+numConnetablie <- grep(regex,text,value=TRUE)
 regex <- "^[AB]$"
 indexRdV <- grep(regex,text,value=FALSE)
 v_connetablie <- NULL

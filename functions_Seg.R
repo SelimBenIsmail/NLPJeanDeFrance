@@ -59,8 +59,15 @@ rdvExtract <- function (text){
 #### capture des connetablies ####
 connetablieExtract <- function(text){
   regex <- "[0-9]+°"
-  numConnetablie <- grep(regex,text,value=TRUE)
   indexConnetablie <- grep(regex,text,value=FALSE)
+  #fusion des elements "bis" du vecteur au numero de connetablie
+  for(i in indexConnetablie){ 
+    if(text[i+1]=="bis"){
+      text[i] <- str_c(text[i],"bis", sep=" ")
+      text <- text[-(i+1)]
+    }
+  }
+  numConnetablie <- grep(regex,text,value=TRUE)
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
   v_connetablie <- NULL
