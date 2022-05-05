@@ -26,13 +26,13 @@ indexRdV <- grep(regex,text,value=FALSE)
 v_connetablie <- NULL
 v_section <- NULL
 
+#caputure de la définition de chaque connétablie
 for (j in indexConnetablie){
   connetablie <- NULL
   RdVMark <- which(indexRdV >= j)[1]
-  
   beg <- j+1 
   end <- indexRdV[RdVMark]
-  
+
   if(!is.na(end)) {
     i <- text[beg]
     while (i != text[end] && !str_detect(i, "[0-9]+\\." )) {
@@ -42,9 +42,9 @@ for (j in indexConnetablie){
     }
     v_connetablie <- c(v_connetablie,connetablie)
   }
-  
 }
 
+#Capture de la section de chaque connetablie
 for (j in indexConnetablie){
   section <- NULL
   beg <- j+1 
