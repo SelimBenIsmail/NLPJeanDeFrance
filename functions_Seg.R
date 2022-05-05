@@ -151,6 +151,13 @@ connetablieExtract <- function(text){
   df = data.frame()
   for (i in 1:nrow(df_connetablie)) {
     t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
+    #cas où  il n'y a pas de rang de voie
+    if(is.na(t[1,1])){
+      t  <- renteExtract(unlist(str_split(df_connetablie$section[i], " ")))
+      rdvNA <- NA
+      rdvNA[1:nrow(t)] <- NA 
+      t <- cbind(rdvNA,t)
+    }  
     for (j in 1:nrow(t)) {
       df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
     }

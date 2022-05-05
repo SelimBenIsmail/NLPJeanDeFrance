@@ -23,8 +23,9 @@ for(i in indexConnetablie){
   }
 }
 if(!is.null(v_remove)){
-  indexRdV <- indexRdV[-v_remove]
+  text <- text[-v_remove]
 }
+
 indexConnetablie <- grep(regex,text,value=FALSE)
 
 numConnetablie <- grep(regex,text,value=TRUE)
@@ -89,8 +90,14 @@ names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
 ## extraction des rangs de voie  pour chaque connetablie##
 df = data.frame()
 for (i in 1:nrow(df_connetablie)) {
-  
   t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
+#cas où  il n'y a pas de rang de voie
+  if(is.na(t[1,1])){
+    t  <- renteExtract(unlist(str_split(df_connetablie$section[i], " ")))
+    rdvNA <- NA
+    rdvNA[1:nrow(t)] <- NA 
+    t <- cbind(rdvNA,t)
+  }
   for (j in 1:nrow(t)) {
     df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
   }
