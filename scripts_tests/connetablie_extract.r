@@ -72,6 +72,7 @@ names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
 ## extraction des rangs de voie  pour chaque connetablie##
 df = data.frame()
 for (i in 1:nrow(df_connetablie)) {
+  
   t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
   for (j in 1:nrow(t)) {
     df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
