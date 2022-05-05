@@ -22,9 +22,11 @@ for(i in indexConnetablie){
     v_remove <- c(v_remove,i+1)
   }
 }
-text <- text[-v_remove]
-
+if(!is.null(v_remove)){
+  indexRdV <- indexRdV[-v_remove]
+}
 indexConnetablie <- grep(regex,text,value=FALSE)
+
 numConnetablie <- grep(regex,text,value=TRUE)
 regex <- "^[AB]$"
 indexRdV <- grep(regex,text,value=FALSE)

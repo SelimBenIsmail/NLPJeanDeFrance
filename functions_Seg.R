@@ -37,7 +37,6 @@ rdvExtract <- function (text){
     }
   }
   if(!is.null(v_remove_A)){
-    print(v_remove_A)
     indexRdV <- indexRdV[-v_remove_A]
   }
   
@@ -73,13 +72,20 @@ rdvExtract <- function (text){
 connetablieExtract <- function(text){
   regex <- "[0-9]+°"
   indexConnetablie <- grep(regex,text,value=FALSE)
+  
   #fusion des elements "bis" du vecteur au numero de connetablie
+  v_remove <- NULL
   for(i in indexConnetablie){ 
     if(text[i+1]=="bis"){
       text[i] <- str_c(text[i],"bis", sep=" ")
-      text <- text[-(i+1)]
+      v_remove <- c(v_remove,i+1)
     }
   }
+  if(!is.null(v_remove)){
+    text <- text[-v_remove]
+  }
+  indexConnetablie <- grep(regex,text,value=FALSE)
+  
   numConnetablie <- grep(regex,text,value=TRUE)
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
