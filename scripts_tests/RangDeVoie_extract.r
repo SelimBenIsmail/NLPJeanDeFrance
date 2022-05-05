@@ -3,7 +3,7 @@ library(stringr)
 library(plyr)
 source("functions_seg.R")
 ## Setting ##
-dataImported <- scan(file = "extrait_p37_p57.txt", what = "string")
+dataImported <- scan(file = "sources/extrait_p37_p57.txt", what = "string")
 text <- dataImported
 
 ## suppression des numéros de pages ##
@@ -13,7 +13,19 @@ text <- str_remove(text, regex)
 ## capture du rang des voies ##
 regex <- "^[AB]$"
 indexRdV <- grep(regex,text,value=FALSE)
-RdV <- grep(regex,text,value=TRUE)
+
+#suppression des faux indexes
+v_remove <- NULL
+for(i in indexRdV){
+  if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]+\\.")){
+    v_remove <- c(v_remove,which(indexRdV==i))
+  }
+}
+if(!is.null(v_remove)){
+  indexRdV <- indexRdV[-v_remove]
+}
+
+RdV <- text[indexRdV]
 result <- NULL
 for (j in indexRdV){
   section <- NULL

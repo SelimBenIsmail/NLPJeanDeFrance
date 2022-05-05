@@ -13,20 +13,35 @@ text <- str_remove(text, regex)
 ## capture des connetablies ##
 regex <- "[0-9]+°"
 indexConnetablie <- grep(regex,text,value=FALSE)
+
 #fusion des elements "bis" du vecteur au numero de connetablie
+v_remove <- NULL
 for(i in indexConnetablie){ 
   if(text[i+1]=="bis"){
     text[i] <- str_c(text[i],"bis", sep=" ")
-    text <- text[-(i+1)]
+    v_remove <- c(v_remove,i+1)
   }
 }
+text <- text[-v_remove]
+
+indexConnetablie <- grep(regex,text,value=FALSE)
 numConnetablie <- grep(regex,text,value=TRUE)
 regex <- "^[AB]$"
 indexRdV <- grep(regex,text,value=FALSE)
+#suppression des faux indexes
+v_remove <- NULL
+for(i in indexRdV){
+  if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]+\\.")){
+    v_remove <- c(v_remove,which(indexRdV==i))
+  }
+}
+if(!is.null(v_remove)){
+  indexRdV <- indexRdV[-v_remove]
+}
 v_connetablie <- NULL
 v_section <- NULL
 
-#caputure de la définition de chaque connétablie
+#capture de la définition de chaque connétablie
 for (j in indexConnetablie){
   connetablie <- NULL
   RdVMark <- which(indexRdV >= j)[1]
@@ -38,7 +53,7 @@ for (j in indexConnetablie){
   }
   if(!is.na(end)) {
     i <- text[beg]
-    while (i != text[end] && !str_detect(i, "[0-9]+\\." )) {
+    while (beg != end && !str_detect(i, "[0-9]+\\." )) {
       connetablie <- str_c(connetablie,i," ")
       beg <- beg +1
       i <- text[beg]

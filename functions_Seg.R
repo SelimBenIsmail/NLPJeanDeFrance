@@ -28,7 +28,20 @@ renteExtract <- function(text){
 rdvExtract <- function (text){
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
-  RdV <- grep(regex,text,value=TRUE)
+
+  #suppression des faux indexes
+  v_remove_A <- NULL
+  for(i in indexRdV){
+    if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]+\\.")){
+      v_remove_A <- c(v_remove_A,which(indexRdV==i))
+    }
+  }
+  if(!is.null(v_remove_A)){
+    print(v_remove_A)
+    indexRdV <- indexRdV[-v_remove_A]
+  }
+  
+  RdV <- text[indexRdV]
   result <- NULL
   for (j in indexRdV){
     section <- NULL
@@ -70,6 +83,16 @@ connetablieExtract <- function(text){
   numConnetablie <- grep(regex,text,value=TRUE)
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
+  #suppression des faux indexes
+  v_remove <- NULL
+  for(i in indexRdV){
+    if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]+\\.")){
+      v_remove <- c(v_remove,which(indexRdV==i))
+    }
+  }
+  if(!is.null(v_remove)){
+    indexRdV <- indexRdV[-v_remove]
+  }
   v_connetablie <- NULL
   v_section <- NULL
   
@@ -85,7 +108,7 @@ connetablieExtract <- function(text){
     }
     if(!is.na(end)) {
       i <- text[beg]
-      while (i != text[end] && !str_detect(i, "[0-9]+\\." )) {
+      while (beg != end && !str_detect(i, "[0-9]+\\." )) {
         connetablie <- str_c(connetablie,i," ")
         beg <- beg +1
         i <- text[beg]
