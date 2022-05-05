@@ -80,6 +80,9 @@ connetablieExtract <- function(text){
     beg <- j+1 
     end <- indexRdV[RdVMark]
     
+    if(is.na(end)) {
+      end <- length(text)
+    }
     if(!is.na(end)) {
       i <- text[beg]
       while (i != text[end] && !str_detect(i, "[0-9]+\\." )) {
@@ -96,6 +99,7 @@ connetablieExtract <- function(text){
     section <- NULL
     beg <- j+1 
     end <- (indexConnetablie[which(indexConnetablie==j)+1])-1
+    
     if(is.na(end)) {
       end <- length(text)
     }
@@ -108,7 +112,7 @@ connetablieExtract <- function(text){
   }
   
   ## Données en sous forme de Dataframe ##
-  if(length(numConnetablie == length(v_connetablie)+1)){
+  if(length(numConnetablie) == length(v_connetablie)+1){
     df_connetablie =  data.frame(numConnetablie[1:length(numConnetablie)-1],v_connetablie[1:length(numConnetablie)-1] ,v_section[1:length(numConnetablie)-1])
   } else df_connetablie =  data.frame(numConnetablie, v_connetablie, v_section)
   names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
