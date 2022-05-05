@@ -31,14 +31,18 @@ for (j in indexConnetablie){
   RdVMark <- which(indexRdV >= j)[1]
   
   beg <- j+1 
-  end <- indexRdV[RdVMark]-1
+  end <- indexRdV[RdVMark]
   
   if(!is.na(end)) {
-    for (i in text[beg:end]) {
+    i <- text[beg]
+    while (i != text[end] && !str_detect(i, "[0-9]+\\." )) {
       connetablie <- str_c(connetablie,i," ")
+      beg <- beg +1
+      i <- text[beg]
     }
     v_connetablie <- c(v_connetablie,connetablie)
   }
+  
 }
 
 for (j in indexConnetablie){
