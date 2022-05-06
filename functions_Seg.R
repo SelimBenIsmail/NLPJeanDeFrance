@@ -23,18 +23,18 @@ renteExtract <- function(text){
   
 #Separation entre les num de rentes succecives et les num de rentes succecives sur une meme connetablie
   if(nrow(df)>0){
+    print(count_connetablie)
     for(i in 1:nrow(df)){
       df$numRente[i] <- str_replace(df$numRente[i],str_c(as.character(count_connetablie),"\\."),str_c("\\.",as.character(count_connetablie)))
       count_connetablie <<- count_connetablie + 1
     }
   }
-
   df_rentes <<- rbind(df_rentes, df)#df cumulant toutes les rentes. A affecter à un dataframe global
   return(df)
 }
 
 #### capture du rang des voies ####
-rdvExtract <- function (text){
+rdvExtract <- function (text,rang){
   regex <- "^[AB]$"
   indexRdV <- grep(regex,text,value=FALSE)
 
@@ -149,7 +149,7 @@ connetablieExtract <- function(text){
     }
   }
   
-  ## Données en sous forme de Dataframe ##
+  ## Donnees en sous forme de Dataframe ##
   if(length(numConnetablie) == length(v_connetablie)+1){
     df_connetablie =  data.frame(numConnetablie[1:length(numConnetablie)-1],v_connetablie[1:length(numConnetablie)-1] ,v_section[1:length(numConnetablie)-1])
   } else df_connetablie =  data.frame(numConnetablie, v_connetablie, v_section)
@@ -157,17 +157,23 @@ connetablieExtract <- function(text){
   df_connetablies <<- rbind(df_connetablies,df_connetablie[1:2])#df cumulant toutes les connetablie. dataframe global
   
   ## extraction des rangs de voie  pour chaque connetablie ##
-  df = data.frame()
+  df = data.frame(numConnetablie <- NULL, connetablie <- NULL, rdv <- NULL, numRente <- NULL,rente <- NULL)
   for (i in 1:nrow(df_connetablie)) {
     count_connetablie <<- 1
-    t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
-    #cas où  il n'y a pas de rang de voie
-    if(is.na(t[1,1])){
+    #cas le numero de connetablie comporte une particule bis
+    if(str_detect(df_connetablie$numConnetablie[i],"bis")){
+      num <- str_extract(df_connetablie$numConnetablie[i],"\\d+°")
+      count_connetablie <<- length(str_subset(df[,1],num))+1
+    }
+    #cas ou  il n y a pas de rang de voie A
+    if(!str_detect(df_connetablie$section[i],"A [0-9]{2,}\\.")){
       t  <- renteExtract(unlist(str_split(df_connetablie$section[i], " ")))
       rdvNA <- NA
       rdvNA[1:nrow(t)] <- NA 
       t <- cbind(rdvNA,t)
-    }  
+    }else {
+      t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
+    } 
     for (j in 1:nrow(t)) {
       df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
     }
@@ -211,7 +217,7 @@ escroeteExtract <- function(text){
     }
     v_section <- c(v_section,section)
   }
-  ## Données en sous forme de Dataframe ##
+  ## Donnees en sous forme de Dataframe ##
   df_escroete = data.frame(numEscroete,v_escroete,v_section)
   names(df_escroete)[1:3] <- c("numEscroete", "escroete", "section")
   df_escroetes <<- rbind(df_escroetes,df_escroete[1:2])#df cumulant toutes les connetablie. dataframe global

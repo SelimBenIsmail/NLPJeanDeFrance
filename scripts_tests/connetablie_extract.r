@@ -90,14 +90,17 @@ names(df_connetablie)[1:3] <- c("numConnetablie", "connetablie", "section")
 ## extraction des rangs de voie  pour chaque connetablie##
 df = data.frame()
 for (i in 1:nrow(df_connetablie)) {
-  t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
-#cas où  il n'y a pas de rang de voie
-  if(is.na(t[1,1])){
+  count_connetablie <- 1
+  #cas où  il n'y a pas de rang de voie A
+  if(!str_detect(df_connetablie$section[i],"A [0-9]{2,}\\.")){
     t  <- renteExtract(unlist(str_split(df_connetablie$section[i], " ")))
     rdvNA <- NA
     rdvNA[1:nrow(t)] <- NA 
     t <- cbind(rdvNA,t)
+  }else {
+      t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
   }
+
   for (j in 1:nrow(t)) {
     df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
   }
