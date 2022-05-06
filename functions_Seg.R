@@ -3,7 +3,7 @@ renteExtract <- function(text){
   regex <- "\\-"
   tirets <- grep(regex, text, value=FALSE)
   text <-  text[-tirets]
-  regex <- "[0-9]+\\."
+  regex <- "[0-9]{2,}\\."
   numRente <-  str_subset(text,regex)
   indexRente <- grep(regex,text,value=FALSE)
   result <- NULL
@@ -20,7 +20,16 @@ renteExtract <- function(text){
     result <- c(result,sentence)
   }
   df = data.frame(numRente,result)
-  df_rentes <<- rbind(df_rentes, df)#df cumulant toutes les rentes. A affeccter à un dataframe global
+  
+#Separation entre les num de rentes succecives et les num de rentes succecives sur une meme connetablie
+  if(nrow(df)>0){
+    for(i in 1:nrow(df)){
+      df$numRente[i] <- str_replace(df$numRente[i],str_c(as.character(count_connetablie),"\\."),str_c("\\.",as.character(count_connetablie)))
+      count_connetablie <<- count_connetablie + 1
+    }
+  }
+
+  df_rentes <<- rbind(df_rentes, df)#df cumulant toutes les rentes. A affecter à un dataframe global
   return(df)
 }
 
@@ -32,7 +41,7 @@ rdvExtract <- function (text){
   #suppression des faux indexes
   v_remove_A <- NULL
   for(i in indexRdV){
-    if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]+\\.")){
+    if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]{2,}\\.")){
       v_remove_A <- c(v_remove_A,which(indexRdV==i))
     }
   }
@@ -92,7 +101,7 @@ connetablieExtract <- function(text){
   #suppression des faux indexes
   v_remove <- NULL
   for(i in indexRdV){
-    if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]+\\.")){
+    if(text[i] ==  "A" && !str_detect(text[i+1],"[0-9]{2,}\\.")){
       v_remove <- c(v_remove,which(indexRdV==i))
     }
   }
@@ -114,7 +123,7 @@ connetablieExtract <- function(text){
     }
     if(!is.na(end)) {
       i <- text[beg]
-      while (beg != end && !str_detect(i, "[0-9]+\\." )) {
+      while (beg != end && !str_detect(i, "[0-9]{2,}\\." )) {
         connetablie <- str_c(connetablie,i," ")
         beg <- beg +1
         i <- text[beg]
@@ -150,6 +159,7 @@ connetablieExtract <- function(text){
   ## extraction des rangs de voie  pour chaque connetablie ##
   df = data.frame()
   for (i in 1:nrow(df_connetablie)) {
+    count_connetablie <<- 1
     t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
     #cas où  il n'y a pas de rang de voie
     if(is.na(t[1,1])){
@@ -162,7 +172,6 @@ connetablieExtract <- function(text){
       df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
     }
   }
-  
   return(df)
 }
 
