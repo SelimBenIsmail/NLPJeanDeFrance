@@ -23,7 +23,6 @@ renteExtract <- function(text){
   
 #Separation entre les num de rentes succecives et les num de rentes succecives sur une meme connetablie
   if(nrow(df)>0){
-    print(count_connetablie)
     for(i in 1:nrow(df)){
       df$numRente[i] <- str_replace(df$numRente[i],str_c(as.character(count_connetablie),"\\."),str_c("\\.",as.character(count_connetablie)))
       count_connetablie <<- count_connetablie + 1

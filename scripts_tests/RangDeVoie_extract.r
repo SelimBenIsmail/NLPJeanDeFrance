@@ -5,6 +5,7 @@ source("functions_seg.R")
 ## Setting ##
 dataImported <- scan(file = "sources/extrait_p37_p57.txt", what = "string")
 text <- dataImported
+count_connetablie <- 1
 
 ## suppression des numéros de pages ##
 regex  <- "\\{[0-9]+\\}"

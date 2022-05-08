@@ -8,16 +8,19 @@ source("functions_Seg.R")
 dataImported <- scan(file = "./sources/extrait_p37_p57.txt", what = "string")
 text <- dataImported
 df_rentes = data.frame()
+## variables globales ##
+count_connetablie <- 1
 
 ## suppression des numéros de pages ##
 regex  <- "\\{[0-9]+\\}"
 text <- str_remove(text, regex)
+
+
 renteExtract(text)
 
 ## Reconnaissance d'entités nommées ##
 
 regex <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
-#text <- df_rentes$result[1]
 r <- NULL
 
 
