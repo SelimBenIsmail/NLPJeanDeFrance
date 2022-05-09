@@ -18,6 +18,9 @@ regex  <- "\\{[0-9]+\\}"
 text <- str_remove(text, regex)
 
 renteExtract(text)
+for(i in 1:nrow(df_rentes)){
+  df_rentes$numRente[i] <- str_replace(df_rentes$numRente[i],str_c(as.character(i),"\\.?"),str_c(as.character(i),"\\."))
+}
 
 #### Methode dérivée de Damerau-Levenshtein ####
 DamerauLevenshtein_mod <- function(str1,str2){
@@ -58,6 +61,15 @@ for(i in r[1:dim]){
   }
 }
 m_distance = matrix(d,nrow = dim,ncol = dim, byrow = TRUE)
-print(m_distance)
+#heatmap(m_distance,Rowv = NA, Colv = NA)
+clustring_lim <- 4
+w <- which(m_distance <= clustring_lim & m_distance !=0  ,arr.ind = TRUE)
+w <- w[1:(nrow(w)/2),]
+for(i in 1:nrow(w)){
+  cat(c("La distance Damerau-Levenshtein entre ", r[w[i,1]], "et ", r[w[i,2]]," est de " ,m_distance[w[i,1],w[i,2]], "\n"))
+}
+
+  
+
 
 
