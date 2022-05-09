@@ -3,6 +3,7 @@ setwd(dir="~/Rprojects/NLPJeanDeFrance")
 library(stringr)
 library(tidyverse)
 library(comparator)
+library(ggplot2)
 source("functions_Seg.R")
 
 ## Input ##
@@ -19,19 +20,23 @@ text <- str_remove(text, regex)
 renteExtract(text)
 
 #### Methode dérivée de Damerau-Levenshtein ####
-DamerauLevenshtein_mod <- function (deletion = 1, insertion = 1, substitution = 1, transposition = 1, 
-          normalize = FALSE, similarity = FALSE, ignore_case = FALSE, 
-          use_bytes = FALSE) 
-{
-  arguments <- c(as.list(environment()))
-  arguments$similarity <- similarity
-  arguments$distance <- !similarity
-  arguments$symmetric <- deletion == insertion
-  arguments$tri_inequal <- deletion == insertion & !similarity
-  do.call("new", append("DamerauLevenshtein", arguments))
+DamerauLevenshtein_mod <- function(str1,str2){
+  distance_modicateur <- 0
+  if(str_ends(str1,"s") != str_ends(str2,"s")){
+    distance_modicateur <- distance_modicateur - .75
+  }
+  if((str_detect(str1,"ce") && str_detect(str2,"che"))||
+     (str_detect(str1,"ci") && str_detect(str2,"chi"))){
+    distance_modicateur <- distance_modicateur - .75
+    
+  } else if((str_detect(str1,"che") && str_detect(str2,"ce"))||
+            (str_detect(str1,"chi") && str_detect(str2,"ci"))){
+    distance_modicateur <- distance_modicateur - .75
+  }
+  
+  obj <- new("DamerauLevenshtein",deletion = 1, insertion = 1, substitution = 1, transposition = 1)
+  return (obj(str1,str2)+distance_modicateur)
 }
-
-
 
 #### Reconnaissance d'entités nommées ####
 r <- NULL
@@ -47,9 +52,9 @@ d <- NULL
 dim <- 20
 for(i in r[1:dim]){
   for(j in r[1:dim]){
-    f <- DamerauLevenshtein_mod()(i,j)
+    f <- DamerauLevenshtein_mod(i,j)
     d <- c(d,f)
-    #cat(c("La distance entre ",i, " et ", j ," est  de ", f, " \n"))
+    #cat(c("La distance entre ",i, " et ", j ," est  de ", f, "\n"))
   }
 }
 m_distance = matrix(d,nrow = dim,ncol = dim, byrow = TRUE)
