@@ -52,7 +52,7 @@ r <- unique(r)
 
 #### Calcul de la distance Damerau-Levenshtein  ####
 d <- NULL
-dim <- 20
+dim <- 50
 for(i in r[1:dim]){
   for(j in r[1:dim]){
     f <- DamerauLevenshtein_mod(i,j)
@@ -69,7 +69,9 @@ for(i in 1:nrow(w)){
   cat(c("La distance Damerau-Levenshtein entre ", r[w[i,1]], "et ", r[w[i,2]]," est de " ,m_distance[w[i,1],w[i,2]], "\n"))
 }
 
-  
-
-
+# rownames(m_distance) = r[1:dim]
+# colnames(m_distance) = r[1:dim]
+# clus = hclust(as.dist(m_distance))
+# plot(clus, hang=-1)
+# 
 
