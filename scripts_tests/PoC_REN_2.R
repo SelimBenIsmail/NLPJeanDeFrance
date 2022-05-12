@@ -6,6 +6,7 @@ library(comparator)
 library(ggplot2)
 source("functions_Seg.R")
 
+
 ## Input ##
 dataImported <- scan(file = "./sources/extrait_p37_p57.txt", what = "string")
 text <- dataImported
