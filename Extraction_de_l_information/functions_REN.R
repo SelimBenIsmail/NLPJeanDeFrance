@@ -1,6 +1,9 @@
 ##### libraries #####
 library(stringr)
 
+#### regex ####
+regex_anthroponyme <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
+
 #### Methode pour capturer des EN ####
 
 ren_extract <- function(text, first = FALSE){

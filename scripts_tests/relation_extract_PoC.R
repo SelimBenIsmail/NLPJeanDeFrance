@@ -39,6 +39,10 @@ for(i in df_rentes$result[19:23]){
   
   
   A <- ren_extract(s1)
+    if(length(A)==0){
+      print(A)
+      A[1] <- NA
+    }
   B <- ren_extract(s2)
   
   for(i in 1:length(B)){
