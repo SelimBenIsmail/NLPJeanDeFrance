@@ -1,0 +1,5 @@
+g <- graph_from_data_frame(d=df_links, directed=FALSE) 
+#g <- delete.edges(g,E(g)[V1 == V2])
+lfr = layout.fruchterman.reingold(g)
+plot(g, layout=lfr, vertex.size=3 , vertex.label=NA)
+#plot(g, vertex.size=5, vertex.label.cex=.8)

@@ -110,7 +110,7 @@ connetablieExtract <- function(text){
   v_connetablie <- NULL
   v_section <- NULL
   
-  #caputure de la définition de chaque connétablie
+  #caputure de la définition de chaque connetablie
   for (j in indexConnetablie){
     connetablie <- NULL
     RdVMark <- which(indexRdV >= j)[1]
@@ -167,14 +167,25 @@ connetablieExtract <- function(text){
     #cas ou  il n y a pas de rang de voie A
     if(!str_detect(df_connetablie$section[i],"A [0-9]{2,}\\.")){
       t  <- renteExtract(unlist(str_split(df_connetablie$section[i], " ")))
-      rdvNA <- NA
-      rdvNA[1:nrow(t)] <- NA 
-      t <- cbind(rdvNA,t)
-    }else {
+      if ((nrow(t)) == 0) {
+        print ("ok")
+        t <-c(NA, NA, NA)
+      } else {
+        rdvNA <- NA 
+        rdvNA[1:nrow(t)] <- NA 
+        t <- cbind(rdvNA,t)
+      }
+      
+    }else { #Cas ou un rang de voie est detecte dans la connetablie
       t  <- rdvExtract(unlist(str_split(df_connetablie$section[i], " ")))
-    } 
-    for (j in 1:nrow(t)) {
-      df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
+    }
+    if(!is.null(nrow(t))){
+      for (j in 1:nrow(t)) {
+        df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
+      }
+    } else {
+      print("pardon sieur")
+      df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[1], t[2],t[3]))
     }
   }
   return(df)
