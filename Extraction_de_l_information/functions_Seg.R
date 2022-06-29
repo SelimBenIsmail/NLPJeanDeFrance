@@ -1,4 +1,4 @@
-####function to extract a list of rent contain in a text ####
+#### capture des rentes ####
 renteExtract <- function(text){
   regex <- "\\-"
   tirets <- grep(regex, text, value=FALSE)
@@ -21,7 +21,7 @@ renteExtract <- function(text){
   }
   df = data.frame(numRente,result)
   
-#Separation entre les num de rentes succecives et les num de rentes succecives sur une meme connetablie
+#Separation entre les num de rentes successives et les num de rentes successives sur une meme connetablie
   if(nrow(df)>0){
     for(i in 1:nrow(df)){
       df$numRente[i] <- str_replace(df$numRente[i],str_c(as.character(count_connetablie),"\\."),str_c("\\.",as.character(count_connetablie)))
@@ -201,6 +201,8 @@ escroeteExtract <- function(text){
   indexConnetablie <- grep(regex,text,value=FALSE)
   v_escroete <- NULL
   v_section <- NULL
+  
+  #pour chaque indice d'Escroete on recu#
   for (j in indexEscroete){
     
     escroete <- NULL
