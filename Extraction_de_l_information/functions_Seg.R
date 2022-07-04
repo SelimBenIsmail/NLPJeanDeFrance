@@ -168,7 +168,6 @@ connetablieExtract <- function(text){
     if(!str_detect(df_connetablie$section[i],"A [0-9]{2,}\\.")){
       t  <- renteExtract(unlist(str_split(df_connetablie$section[i], " ")))
       if ((nrow(t)) == 0) {
-        print ("ok")
         t <-c(NA, NA, NA)
       } else {
         rdvNA <- NA 
@@ -184,7 +183,6 @@ connetablieExtract <- function(text){
         df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[j,1], t[j,2],t[j,3]))
       }
     } else {
-      print("pardon sieur")
       df <- rbind(df, c(df_connetablie$numConnetablie[i],df_connetablie$connetablie[i],t[1], t[2],t[3]))
     }
   }

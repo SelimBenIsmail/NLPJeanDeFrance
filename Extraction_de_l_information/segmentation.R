@@ -25,4 +25,3 @@ write.csv(x=df_rentes, file="./export/df_rentes.csv", row.names = TRUE)
 
 
 
-

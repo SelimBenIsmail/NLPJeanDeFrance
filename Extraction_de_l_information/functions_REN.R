@@ -8,6 +8,8 @@ regex_anthroponyme <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} 
 
 ren_extract <- function(text, first = FALSE){
   regex <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
+  #regex <- "[:upper:][:lower:]+ "
+  
   if (first){
     str_extract(text,regex)
   } else {
@@ -15,7 +17,7 @@ ren_extract <- function(text, first = FALSE){
   }
 }
 
-#### Methode dérivée de Damerau-Levenshtein ####
+#### Methode derivee de Damerau-Levenshtein ####
 DamerauLevenshtein_mod <- function(str1,str2){
   distance_modicateur <- 0
   if(str_ends(str1,"s") != str_ends(str2,"s")){
@@ -30,6 +32,6 @@ DamerauLevenshtein_mod <- function(str1,str2){
     distance_modicateur <- distance_modicateur - .75
   }
   
-  obj <- new("DamerauLevenshtein",deletion = 1, insertion = 1, substitution = 1, transposition = 1)
+  obj <- new("DamerauLevenshtein",deletion = 1, insertion = 1, substitution = 1.25, transposition = 1)
   return (obj(str1,str2)+distance_modicateur)
 }

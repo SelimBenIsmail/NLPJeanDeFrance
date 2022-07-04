@@ -1,0 +1,56 @@
+---
+title: "named entity recognition"
+author: "Selim Ben Ismail"
+date: "7/3/2022"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+# #### Setting ####
+
+setwd(dir="~/Rprojects/NLPJeanDeFrance")
+source("./main.R")
+library (knitr)
+```
+
+```{r, results='asis'}
+heatmap(m_distance,Rowv = NA, Colv = NA)
+kable(df_closeDistances, caption = "Occurences proches")
+
+```
+
+nombre de suspicion de doublons :
+
+```{r,echo=FALSE}
+length(unique(df_closeDistances$Antrhoponyme_1))
+```
+
+nombre à 1 de distance :
+
+```{r, echo=FALSE}
+nrow(df_closeDistances[df_closeDistances$Distance == 1, ])
+```
+
+nombre à 2 de distance :
+
+```{r, echo=FALSE}
+nrow(df_closeDistances[df_closeDistances$Distance == 2, ])
+```
+
+nombre à 3 de distance :
+
+```{r, echo=FALSE}
+nrow(df_closeDistances[df_closeDistances$Distance == 3, ])
+```
+
+nombre à 4 de distance :
+
+```{r, echo=FALSE}
+nrow(df_closeDistances[df_closeDistances$Distance == 4, ])
+```
+
