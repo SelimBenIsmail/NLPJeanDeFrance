@@ -19,16 +19,16 @@ ren_extract <- function(text, first = FALSE){
 
 #### Methode derivee de Damerau-Levenshtein ####
 DamerauLevenshtein_mod <- function(str1,str2){
-  distance_modicateur <- 0
-  if(str_ends(str1,"s") != str_ends(str2,"s")){
-    distance_modicateur <- distance_modicateur - .75
-  }
-  if((str_detect(str1,"ce") && str_detect(str2,"che"))||
-     (str_detect(str1,"ci") && str_detect(str2,"chi"))){
+    distance_modicateur <- 0
+    if(str_ends(str1,"S") != str_ends(str2,"S")){
+      distance_modicateur <- distance_modicateur - .75
+   }
+  if((str_detect(str1,"CE") && str_detect(str2,"CHE"))||
+     (str_detect(str1,"CI") && str_detect(str2,"CHI"))){
     distance_modicateur <- distance_modicateur - .75
     
-  } else if((str_detect(str1,"che") && str_detect(str2,"ce"))||
-            (str_detect(str1,"chi") && str_detect(str2,"ci"))){
+  } else if((str_detect(str1,"CHE") && str_detect(str2,"CE"))||
+            (str_detect(str1,"CHE") && str_detect(str2,"CI"))){
     distance_modicateur <- distance_modicateur - .75
   }
   

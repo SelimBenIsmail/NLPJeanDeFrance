@@ -16,3 +16,8 @@ source("./Extraction_de_l_information/segmentation.R")
 source("./Extraction_de_l_information/REN.R")
 # source("./Modelisation_des_graphes/relations.R")
 # source("./Modelisation_des_graphes/graphes_gen.R")
+
+
+#### Récupération des tables ####
+write.csv(x=df_main, file="./export/df_main.csv", row.names = TRUE)
+write.csv(x=l_anthroponymes, file="./export/l_anthroponymes.csv", row.names = FALSE)
