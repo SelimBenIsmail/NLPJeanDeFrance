@@ -9,7 +9,7 @@ for (i in df_rentes$result)
 }
 l_anthroponymes <- str_to_upper(unique(l_anthroponymes))
 
-#division de anthropoymes en prenom et patronymes en vu du clustering 
+#division de anthropoymes en prenom et patronymes 
 l_prenoms <- NULL
 l_patronymes <- NULL
 
@@ -34,17 +34,34 @@ for(i in l_anthroponymes[1:dim]){
   }
 }
 m_distance <- matrix(distance,nrow = dim,ncol = dim, byrow = TRUE)
-df_closeDistances = data.frame()
-m_closeValues <- which(m_distance <= clustering_lim & m_distance !=0  ,arr.ind = TRUE)
+for(i in 1:nrow(m_distance)){
+  m_distance[i,1:i] <- NA # eviter que les resultats se repetent
+}
+l_cluster = list()
+
+df_closeDistances = data.frame()#del
+m_closeValues <- which(m_distance <= clustering_lim & m_distance !=0  ,arr.ind = TRUE) #del
 if(!is.null((m_closeValues))){
-  if (is.null(nrow(m_closeValues))) {
-    v_closeDistances <- c(l_anthroponymes[m_closeValues[i,1]],l_anthroponymes[m_closeValues[i,2]],m_distance[m_closeValues[i,1],m_closeValues[i,2]])
-    df_closeDistances <- rbind(df_closeDistances,v_closeDistances)  } else{
-    for(i in 1:nrow(m_closeValues)){
-      v_closeDistances <- c(l_anthroponymes[m_closeValues[i,1]],l_anthroponymes[m_closeValues[i,2]],m_distance[m_closeValues[i,1],m_closeValues[i,2]])
-      df_closeDistances <- rbind(df_closeDistances,v_closeDistances)
+  if (is.null(nrow(m_closeValues))) { #cas ou il n'y a qu'une ligne dans m_closeValues
+    
+    #v_closeDistances <- c(l_anthroponymes[m_closeValues[i,1]],l_anthroponymes[m_closeValues[i,2]],m_distance[m_closeValues[i,1],m_closeValues[i,2]])
+    #df_closeDistances <- rbind(df_closeDistances,v_closeDistances)  
+    
+    } else{
+    for(i in 1:nrow(m_closeValues)){ # !! cas normal !! #
+      ## test
+      v_row <- which(m_distance[2,] <= clustering_lim & m_distance !=0) 
+      
+      
+      
+      ##
+      
+      
+      
+      #v_closeDistances <- c(l_anthroponymes[m_closeValues[i,1]],l_anthroponymes[m_closeValues[i,2]],m_distance[m_closeValues[i,1],m_closeValues[i,2]])
+      #df_closeDistances <- rbind(df_closeDistances,v_closeDistances)
     }
-    names(df_closeDistances)[1:3] <- c("Antrhoponyme_1","Antrhoponyme_2","Distance")
+    #names(df_closeDistances)[1:3] <- c("Antrhoponyme_1","Antrhoponyme_2","Distance")
   }
 }else{
   cat("Aucun resultat \n")
