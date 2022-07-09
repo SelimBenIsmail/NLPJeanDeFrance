@@ -12,17 +12,21 @@ for (i in df_main$rente)
   caps <- c(caps,k)
   l_anthroponymes <- c(l_anthroponymes,v_anthroponymes)
 }
+l_anthroponymes <- unique(l_anthroponymes)
+l_anthroponymes <- l_anthroponymes[!is.na(l_anthroponymes)]
 df_main$rente <- caps 
 
 #### Calcul de la distance Damerau-Levenshtein  ####
 distance <- NULL
-dim <- 100
+dim <- length(l_anthroponymes)
 clustering_lim <- 3
 
-l_anthroponymes <- str_to_upper(unique(l_anthroponymes))
+l_anthroponymes <- str_to_upper(l_anthroponymes)
 for(i in l_anthroponymes[1:dim]){
   for(j in l_anthroponymes[1:dim]){
+    print(c(i,"  ", j))
     distance <- c(distance,DamerauLevenshtein_mod(i,j))
+    
   }
 }
 m_distance = matrix(distance,nrow = dim,ncol = dim, byrow = TRUE)

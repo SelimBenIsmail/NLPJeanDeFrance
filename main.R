@@ -5,6 +5,7 @@ library(tidyverse)
 library(comparator)
 library(ggplot2)
 library(igraph)
+library(dplyr)
 source("./Extraction_de_l_information/functions_Seg.R")
 source("./Extraction_de_l_information/functions_REN.R")
 
@@ -13,7 +14,7 @@ source("./Extraction_de_l_information/functions_REN.R")
 dataImported <- scan(file = "./sources/DossierFranceTXT.txt", what = "string")
 
 source("./Extraction_de_l_information/segmentation.R")
-source("./Extraction_de_l_information/REN.R")
+#source("./Extraction_de_l_information/REN.R")
 # source("./Modelisation_des_graphes/relations.R")
 # source("./Modelisation_des_graphes/graphes_gen.R")
 
