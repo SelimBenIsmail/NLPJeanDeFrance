@@ -169,8 +169,6 @@ connetablieExtract <- function(text){
     #cas ou le numero de connetablie comporte une particule bis
     if(str_detect(df_connetablie$numConnetablie[i],"bis")){
       num <- str_extract(df_connetablies$numConnetablie[i],"\\d+°")
-      print(df_connetablie$numConnetablie[i])
-      print(df)
       if(nrow(df)>0){
         col <- df[,1]
         count_connetablie <<- length(str_subset(col,num))+1 
@@ -206,7 +204,6 @@ connetablieExtract <- function(text){
 #### capture des escroetes ####
 escroeteExtract <- function(text){
   regex <- "^[IV]+([1-9])?$"
-  #regex <- "^[IV]+([1-9])"
   indexEscroete <- grep(regex,text,value=FALSE)
   numEscroete <- grep(regex,text,value=TRUE)
   regex <- "[1-9]+°"
@@ -227,6 +224,12 @@ escroeteExtract <- function(text){
     }
     v_escroete <- c(v_escroete,escroete)
   }
+  
+  #suppression des particules bis et ter dans la definiton de l'escroete
+  for(i in v_escroete){
+    v_escroete[i] <- str_remove(i,"(bis |ter )")
+  }
+  
   
   for (j in indexEscroete){
     section <- NULL
