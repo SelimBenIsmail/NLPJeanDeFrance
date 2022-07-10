@@ -225,10 +225,10 @@ escroeteExtract <- function(text){
     v_escroete <- c(v_escroete,escroete)
   }
   
-  #suppression des particules bis et ter dans la definiton de l'escroete
-  for(i in v_escroete){
-    v_escroete[i] <- str_remove(i,"(bis |ter )")
-  }
+  # #suppression des particules bis et ter dans la definiton de l'escroete
+  # for(i in v_escroete){
+  #   v_escroete[i] <- str_remove(i,"(bis |ter )")
+  # }
   
   
   for (j in indexEscroete){

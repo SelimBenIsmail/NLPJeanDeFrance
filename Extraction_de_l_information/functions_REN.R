@@ -3,17 +3,25 @@ library(stringr)
 
 #### regex ####
 regex_anthroponyme <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
+regex_anthroponyme_caps <- "[:upper:]+ (((l[AEI']s?|D[EUO']l?U?|AU?)?){0,2} ?[:upper:]+(-[:upper:]+)?){1,3}"
 
 #### Methode pour capturer des EN ####
-
 ren_extract <- function(text, first = FALSE){
   regex <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
-  #regex <- "[:upper:][:lower:]+ "
   
   if (first){
     str_extract(text,regex)
   } else {
     str_extract_all(text,regex)[[1]]
+  }
+}
+
+#### Methode pour capturer des EN en lettres capitales ####
+ren_extract_caps <- function(text, first = FALSE){
+  if (first){
+    str_extract(text,regex_anthroponyme_caps)
+  } else {
+    str_extract_all(text,regex_anthroponyme_caps)[[1]]
   }
 }
 

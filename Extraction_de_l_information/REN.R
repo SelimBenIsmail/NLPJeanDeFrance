@@ -15,13 +15,13 @@ for (i in df_main$rente)
 l_anthroponymes <- unique(l_anthroponymes)
 l_anthroponymes <- l_anthroponymes[!is.na(l_anthroponymes)]
 df_main$rente <- caps 
+l_anthroponymes <- str_to_upper(l_anthroponymes)
 
 #### Calcul de la distance Damerau-Levenshtein  ####
 distance <- NULL
 dim <- length(l_anthroponymes)
 clustering_lim <- 3
 
-l_anthroponymes <- str_to_upper(l_anthroponymes)
 for(i in l_anthroponymes[1:dim]){
   for(j in l_anthroponymes[1:dim]){
     print(c(i,"  ", j))
@@ -44,7 +44,6 @@ for(i in 1:nrow(m_distance)){
 l_cluster <- l_cluster[!is.na(l_cluster)] 
 
 #### Remplacement des variants ####
-temp <- data.frame()
 for(i in 1:length(df_main$rente)){
   for (j in l_cluster) {
     for(k in j){
