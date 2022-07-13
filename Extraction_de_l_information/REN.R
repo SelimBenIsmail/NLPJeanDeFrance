@@ -1,10 +1,9 @@
 #### Detection des anthroponymes #####
 l_anthroponymes <- NULL
 caps <- NULL
-regex <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
 for (i in df_main$rente)
 {
-  v_anthroponymes <- str_extract_all(i, regex)[[1]]
+  v_anthroponymes <-ren_extract(i)
   k <- i
   for (j in v_anthroponymes) {
     k <- str_replace_all(k,j,str_to_upper(j))
@@ -17,31 +16,13 @@ l_anthroponymes <- l_anthroponymes[!is.na(l_anthroponymes)]
 df_main$rente <- caps 
 l_anthroponymes <- str_to_upper(l_anthroponymes)
 
-#### Calcul de la distance Damerau-Levenshtein  ####
-distance <- NULL
-dim <- length(l_anthroponymes)
-clustering_lim <- 3
-
-for(i in l_anthroponymes[1:dim]){
-  for(j in l_anthroponymes[1:dim]){
-    print(c(i,"  ", j))
-    distance <- c(distance,DamerauLevenshtein_mod(i,j))
-    
-  }
-}
-m_distance = matrix(distance,nrow = dim,ncol = dim, byrow = TRUE)
+#### calcul de distance ####
+#m_distance <- myDamereauLevenstheinDist(l_anthroponymes)
 
 #### clustering ####
-l_cluster = list()
-for(i in 1:nrow(m_distance)){
-  m_distance[i,1:i] <- NA #  pour eviter les doubles detections
-  if(length(v_row <-l_anthroponymes[which(m_distance[i,] <= clustering_lim)])){ #distance egale ou inferieure  a la  limite dans la ligne 
-    l_cluster[[i]] <- c(l_anthroponymes[i],v_row)
-  } else {
-    l_cluster[[i]] <- NA
-  }  
-}
-l_cluster <- l_cluster[!is.na(l_cluster)] 
+#l_cluster <- myClustering(l_anthroponymes,clustering_lim=3,m_distance)
+load("./export/l_cluster_corr.RData")
+
 
 #### Remplacement des variants ####
 for(i in 1:length(df_main$rente)){

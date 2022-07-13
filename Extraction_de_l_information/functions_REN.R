@@ -2,17 +2,15 @@
 library(stringr)
 
 #### regex ####
-regex_anthroponyme <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
-regex_anthroponyme_caps <- "[:upper:]+ (((l[AEI']s?|D[EUO']l?U?|AU?)?){0,2} ?[:upper:]+(-[:upper:]+)?){1,3}"
+regex_anthroponyme <- "(Mgr )?[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
+regex_anthroponyme_caps <- "(MGR )?[:upper:]{2,} (((L[AEI']S?|D[EUO']L?U?|AU?)?){0,2} ?[:upper:]{2,}(-[:upper:]{2,})?){1,3}"
 
 #### Methode pour capturer des EN ####
 ren_extract <- function(text, first = FALSE){
-  regex <- "[:upper:][:lower:]+ (((l[aei']s?|d[euo']l?u?|au?)?){0,2} ?[:upper:][:lower:]+(-[:upper:][:lower:]+)?){1,3}"
-  
   if (first){
-    str_extract(text,regex)
+    str_extract(text,regex_anthroponyme)
   } else {
-    str_extract_all(text,regex)[[1]]
+    str_extract_all(text,regex_anthroponyme)[[1]]
   }
 }
 
@@ -42,4 +40,34 @@ DamerauLevenshtein_mod <- function(str1,str2){
   
   obj <- new("DamerauLevenshtein",deletion = 1, insertion = 1, substitution = 1.25, transposition = 1)
   return (obj(str1,str2)+distance_modicateur)
+}
+
+#### clustering ####
+myClustering <- function(l_anthroponymes,clustering_lim,m_distance){
+  l_cluster = list()
+  for(i in 1:nrow(m_distance)){
+    m_distance[i,1:i] <- NA #  pour eviter les doubles detections
+    if(length(v_row <-l_anthroponymes[which(m_distance[i,] <= clustering_lim)])){ #distance egale ou inferieure  a la  limite dans la ligne 
+      l_cluster[[i]] <- c(l_anthroponymes[i],v_row)
+    } else {
+      l_cluster[[i]] <- NA
+    }  
+  }
+  l_cluster <- l_cluster[!is.na(l_cluster)]  
+  return(l_cluster)
+}
+
+
+#### Calcul de la distance Damerau-Levenshtein  ####
+myDamereauLevenstheinDist <- function(v_string){
+  distance <- NULL
+  dim <- length(v_string)
+  for(i in v_string[1:dim]){
+    for(j in v_string[1:dim]){
+      print(c(i,"  ", j))
+      distance <- c(distance,DamerauLevenshtein_mod(i,j))
+    }
+  }
+  m_distance = matrix(distance,nrow = dim,ncol = dim, byrow = TRUE)
+  return(m_distance)
 }
