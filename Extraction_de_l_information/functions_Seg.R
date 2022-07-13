@@ -201,7 +201,7 @@ connetablieExtract <- function(text){
 
 #### capture des escroetes ####
 escroeteExtract <- function(text){
-  regex <- "^[IV]+([1-9])?( bis)?$"
+  regex <- "^[IV]+([1-9])?( bis| ter)?$"
   indexEscroete <- grep(regex,text,value=FALSE)
   numEscroete <- grep(regex,text,value=TRUE)
   regex <- "[0-9]+°"
@@ -223,8 +223,8 @@ escroeteExtract <- function(text){
   if(!is.null(v_remove)){
     text <- text[-v_remove]
   }
-  indexEscroete <- grep("^[IV]+([1-9])?( bis)?$",text,value=FALSE)
-  numEscroete <- grep("^[IV]+([1-9])?( bis)?$",text,value=TRUE)
+  indexEscroete <- grep("^[IV]+([1-9])?( bis| ter)?$",text,value=FALSE)
+  numEscroete <- grep("^[IV]+([1-9])?( bis| ter)?$",text,value=TRUE)
 
   
   #capture des definitions des escroetes
@@ -243,11 +243,6 @@ escroeteExtract <- function(text){
     }
     v_escroete <- c(v_escroete,escroete)
   }
-  
-  # #suppression des particules bis et ter dans la definiton de l'escroete
-  # for(i in v_escroete){
-  #   v_escroete[i] <- str_remove(i,"(bis |ter )")
-  # }
   
   #capture des sections des escroetes
   for (j in indexEscroete){
