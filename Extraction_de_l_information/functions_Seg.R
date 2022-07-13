@@ -201,13 +201,31 @@ connetablieExtract <- function(text){
 
 #### capture des escroetes ####
 escroeteExtract <- function(text){
-  regex <- "^[IV]+([1-9])?$"
+  regex <- "^[IV]+([1-9])?( bis)?$"
   indexEscroete <- grep(regex,text,value=FALSE)
   numEscroete <- grep(regex,text,value=TRUE)
   regex <- "[0-9]+°"
   indexConnetablie <- grep(regex,text,value=FALSE)
   v_escroete <- NULL
   v_section <- NULL
+  
+  #fusion des elements "bis" du vecteur au numero d'escroete
+  v_remove <- NULL
+  for(i in indexEscroete){
+    if(text[i+1]=="bis"){
+      text[i] <- str_c(text[i],"bis", sep=" ")
+      v_remove <- c(v_remove,i+1)
+    } else if(text[i+1]=="ter"){
+      text[i] <- str_c(text[i],"ter", sep=" ")
+      v_remove <- c(v_remove,i+1)
+    }
+  }
+  if(!is.null(v_remove)){
+    text <- text[-v_remove]
+  }
+  indexEscroete <- grep("^[IV]+([1-9])?( bis)?$",text,value=FALSE)
+  numEscroete <- grep("^[IV]+([1-9])?( bis)?$",text,value=TRUE)
+
   
   #capture des definitions des escroetes
   for (j in indexEscroete){

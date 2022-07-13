@@ -1,6 +1,6 @@
 #### settings ####
-load("./export/dataPostRen.RData")
-source("./Extraction_de_l_information/functions_REN.R")
+#load("./export/dataPostRen.RData")
+#source("./Extraction_de_l_information/functions_REN.R")
 #### Extraction des relations ####
 df_links = data.frame()
 df_nodes =data.frame(anthroponyme = NULL, numEscroete = NULL, nulConnetablie = NULL, rdv = NULL, numRente = NULL)

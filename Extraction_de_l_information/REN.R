@@ -23,7 +23,6 @@ l_anthroponymes <- str_to_upper(l_anthroponymes)
 #l_cluster <- myClustering(l_anthroponymes,clustering_lim=3,m_distance)
 load("./export/l_cluster_corr.RData")
 
-
 #### Remplacement des variants ####
 for(i in 1:length(df_main$rente)){
   for (j in l_cluster) {

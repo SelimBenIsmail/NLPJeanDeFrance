@@ -18,7 +18,7 @@ dataImported <- scan(file = "./sources/DossierFranceTXT.txt", what = "string")
 source("./Extraction_de_l_information/segmentation.R")
 source("./Extraction_de_l_information/REN.R")
 source("./Modelisation_des_graphes/relations.R")
-#source("./Modelisation_des_graphes/graphes_gen.R")
+source("./Modelisation_des_graphes/graphes_gen.R")
 
 
 #### Récupération des tables ####
