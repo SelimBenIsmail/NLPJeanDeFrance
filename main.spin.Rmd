@@ -1,3 +1,5 @@
+
+```{r }
 #### Setting ####
 setwd(dir="~/Rprojects/NLPJeanDeFrance")
 library(stringr)
@@ -22,3 +24,13 @@ source("./scripts/graphes_gen.R")
 #### Récupération des tables ####
 #write.csv(x=df_main, file="./export/df_main.csv", row.names = TRUE)
 #write.csv(x=l_anthroponymes, file="./export/l_anthroponymes.csv", row.names = FALSE)
+```
+
+
+
+---
+title: main.R
+author: selimbenismail
+date: '2022-07-20'
+
+---

@@ -7,7 +7,7 @@ colrs = brewer.pal(n = 8, name = 'RdBu')
 
 #deg <- degree(df_links,mode = all)
 
-###@
+###
 plot(g, layout=lfr, vertex.size=3 , vertex.label=NA)
 #plot(g, vertex.size=5, vertex.label.cex=.8)
 
