@@ -3,13 +3,12 @@ load("./export/dataPostRen.RData")
 source("./scripts/functions_REN.R")
 #### Extraction des relations ####
 df_links = data.frame()
-df_nodes =data.frame(anthroponyme = NULL, numEscroete = NULL, nulConnetablie = NULL, rdv = NULL, numRente = NULL)
 unknow_node <- 0 
-rentes <- df_main$rente[1:length(df_main$rente)]# !!! nombre de rentes traitees !!!
+rentes <- df_main
 
-for(i in 1:length(rentes)){ 
-  if(!is.na(rentes[i])){
-    text_rente <- rentes[i]
+for(i in 1:nrow(rentes)){ 
+  if(!is.na(rentes[i,7])){
+    text_rente <- rentes[i,7]
     regex_remove <-"ki fu(rent)? ((femm?e )|((le )?maistre )|((le )?vallés ))?"
     regex <- str_c(regex_remove,regex_anthroponyme_caps)
     text_rente <- str_remove(text_rente,regex)
@@ -32,21 +31,12 @@ for(i in 1:length(rentes)){
       B <- ren_extract_caps(substring2)
       #### dataframe des aretes ####
       for(k in 1:length(B)){
-        df_links <- rbind(df_links, c(A[1],B[k]))
+        df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i]))
       }
-      #### dataframe des noeuds ####
-      # if (!is_empty(df_nodes)) {
-      #   if(sum(df_nodes[,1] == A[1]) != 0) { #evite les doublons dans le df_nodes
-      #     A[1] <- str_c(A[1],df_main$numRente[i])
-      #   }
-      # }
-      #v_nodes <- c(A[1],df_main$numEscroete[i],df_main$numConnetablie[i],df_main$rdv[i],df_main$numRente[i])
-      #df_nodes <- rbind(df_nodes,v_nodes)
     }
   }
 }
-colnames(df_links) <- c("From", "To")
-#colnames(df_nodes) <- c("Nom", "Num escroete", "Num connetablie", "Rang", "Num rente")
+colnames(df_links) <- c("From", "To","NumEscroete")
 
 #### Correction des unk_nodes ####
 df_uknCorr <- data.frame(
@@ -64,7 +54,12 @@ for (i in 1:nrow(df_uknCorr)) {
 #### Corrections supplementaires ####
 
 df_add_rel <- data_frame(From= c("ROBIERT","TENEMENT DES MALADES"	,"DANIEL"	,"MARIIEN DE L'EVE","MARIIEN DE L'EVE","MARIEN"),
-                         To= c("ROBIERT DE FIERIN",	"BAUDE L'ARTISIEN",	"JEHAN LE GIERMAIN",	"PIERON DE HASNON",	"MARIEN",	"MARGOT DE MAGNI"))
+                         To= c("ROBIERT DE FIERIN",	"BAUDE L'ARTISIEN",	"JEHAN LE GIERMAIN",	"PIERON DE HASNON",	"MARIEN",	"MARGOT DE MAGNI"),
+                         NumEscroete = c("I1","I1","II1","II1","II1","II1")
+                         )
+
+
+
 df_links <- rbind(df_links,df_add_rel)
 
 
@@ -84,7 +79,7 @@ df_links <-  distinct(df_links)
 #### suppression des liens reciproques ####
 ret <- NULL
 for(i in 1:nrow(df_links)){
-  df_links[i,] <- c(df_links$To[i],df_links$From[i])
+  df_links[i,] <- c(df_links$To[i],df_links$From[i],df_links$NumEscroete[i])
   if(filter(df_links, From == df_links$From[i] & To == df_links$To[i]) %>% nrow() >1){
     ret <-  c(ret, i)
   }
