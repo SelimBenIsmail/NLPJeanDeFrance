@@ -7,6 +7,8 @@ unknow_node <- 0
 rentes <- df_main
 
 for(i in 1:nrow(rentes)){ 
+  A <- NULL
+  B <- NULL
   if(!is.na(rentes[i,7])){
     text_rente <- rentes[i,7]
     regex_remove <-"ki fu(rent)? ((femm?e )|((le )?maistre )|((le )?vallés ))?"
@@ -30,9 +32,14 @@ for(i in 1:nrow(rentes)){
       }
       B <- ren_extract_caps(substring2)
       #### dataframe des aretes ####
-      for(k in 1:length(B)){
-        df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i]))
+      if (length(B)!=0) {
+        for(k in 1:length(B)){
+          df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i]))
+        }
+      } else{
+        print(A)
       }
+
     }
   }
 }
