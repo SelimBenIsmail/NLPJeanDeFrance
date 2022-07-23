@@ -10,12 +10,15 @@ for(i in 1:nrow(rentes)){
   A <- NULL
   B <- NULL
   if(!is.na(rentes[i,7])){
-    text_rente <- rentes[i,7]
-    regex_remove <-"ki fu(rent)? ((femm?e )|((le )?maistre )|((le )?vallés ))?"
+    text_rente <- rentes[i,7] # consolidation pour ne pas altérer les donnés du df_main
+    
+    #suppression des expression "ki fu + anthroponyme"
+    regex_remove <- "ki fu(rent)? ((femm?e )|((le )?maistre )|((le )?vallés ))?"
     regex <- str_c(regex_remove,regex_anthroponyme_caps)
     text_rente <- str_remove(text_rente,regex)
     
-    regex_sifu <-"Si fu.*$"
+    #suppression des expression "Si fu + valeur + anthroponyme"
+    regex_sifu <- "Si fu.*$"
     text_rente <- str_remove(text_rente,regex)
 
     #### division en souschaines ####
@@ -36,10 +39,7 @@ for(i in 1:nrow(rentes)){
         for(k in 1:length(B)){
           df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i]))
         }
-      } else{
-        print(A)
-      }
-
+      } 
     }
   }
 }
@@ -80,6 +80,7 @@ for(i in 1:nrow(df_links)){
   }
 }
 df_links <- df_links[-ret,]
+
 #### suppression des doublons 'simple' ####
 df_links <-  distinct(df_links)
 
@@ -96,7 +97,7 @@ df_links <- df_links[!is.na(df_links$From),]
 
 
 ##### Run graphe ####
-source("./scripts/graphes_gen.R")
+#source("./scripts/graphes_gen.R")
 
 
 
