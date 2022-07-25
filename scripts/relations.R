@@ -3,6 +3,7 @@ load("./export/dataPostRen.RData")
 source("./scripts/functions_REN.R")
 #### Extraction des relations ####
 df_links = data.frame()
+df_nodes = data.frame()
 unknow_node <- 0 
 rentes <- df_main
 
@@ -33,10 +34,20 @@ for(i in 1:nrow(rentes)){
         A[1] <- str_c("ukn",unknow_node)
         unknow_node <-  unknow_node +1
       }
+      if (nrow(df_nodes)>0) {
+        if(nrow(df_nodes[df_nodes[,1]==A[1] & df_nodes[,5] != rentes$numRente[i],])>0){
+          A[1] <- str_c(A[1],"_",nrow(df_nodes[df_nodes[,1]==A[1],]))
+        }
+      }
+        df_nodes <-  rbind(df_nodes,c(A[1],rentes$numEscroete[i],rentes$numConnetablie[i],rentes$rdv[i],rentes$numRente[i]))
+      
+      
+
       B <- ren_extract_caps(substring2)
       #### dataframe des aretes ####
       if (length(B)!=0) {
         for(k in 1:length(B)){
+          
           df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i]))
         }
       } 
