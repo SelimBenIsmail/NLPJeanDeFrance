@@ -35,3 +35,4 @@ legend(x=1.2, y=1.,
 
 
 
+#write.csv(x=df_links, file="./export/df_links.csv", row.names = TRUE)

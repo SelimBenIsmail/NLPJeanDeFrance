@@ -98,6 +98,8 @@ df_links <- df_links[!is.na(df_links$From),]
 
 ##### Run graphe ####
 #source("./scripts/graphes_gen.R")
-
-
+#### Export to gephi ####
+# export_gephi <-  df_links[1:3]
+# names(export_gephi) <- c("Source","Target","NumEscroete")
+# write.table(x=export_gephi, file="./export/export_gephi.csv", row.names = FALSE, sep=",")
 
