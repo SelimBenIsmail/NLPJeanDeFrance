@@ -3,7 +3,8 @@ load("./export/dataPostRen.RData")
 source("./scripts/functions_REN.R")
 #### Extraction des relations ####
 df_links = data.frame()
-df_nodes = data.frame()
+#df_nodes = data.frame()
+df_debiteur_rente = data.frame()
 unknow_node <- 0 
 rentes <- df_main
 
@@ -34,27 +35,29 @@ for(i in 1:nrow(rentes)){
         A[1] <- str_c("ukn",unknow_node)
         unknow_node <-  unknow_node +1
       }
-      if (nrow(df_nodes)>0) {
-        if(nrow(df_nodes[df_nodes[,1]==A[1] & df_nodes[,5] != rentes$numRente[i],])>0){
-          A[1] <- str_c(A[1],"_",nrow(df_nodes[df_nodes[,1]==A[1],]))
-        }
-      }
-        df_nodes <-  rbind(df_nodes,c(A[1],rentes$numEscroete[i],rentes$numConnetablie[i],rentes$rdv[i],rentes$numRente[i]))
+      df_debiteur_rente <- rbind(df_debiteur_rente,c(A[1],rentes$numRente[i]))
+#### probleme des rentes multiples pour un meme anthroponyme ####
+      # if (nrow(df_nodes)>0) {
+      #   if(nrow(df_nodes[df_nodes[,1]==A[1] & df_nodes[,5] != rentes$numRente[i],])>0){
+      #     A[1] <- str_c(A[1],"_",unknow_node)
+      #     unknow_node <-  unknow_node +1
+      #   }
+      # }
       
-      
-
+      #df_nodes <-  rbind(df_nodes,c(A[1],rentes$numEscroete[i],rentes$numConnetablie[i],rentes$rdv[i],rentes$numRente[i]))
       B <- ren_extract_caps(substring2)
       #### dataframe des aretes ####
       if (length(B)!=0) {
         for(k in 1:length(B)){
           
-          df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i]))
+          df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i],rentes$numConnetablie[i],rentes$rdv[i],rentes$numRente[i]))
         }
       } 
     }
   }
 }
-colnames(df_links) <- c("From", "To","NumEscroete")
+colnames(df_links) <- c("From", "To","NumEscroete","NumConnetablie", "RdV", "NumRente")
+#colnames(df_nodes) <- c("Anthroponyme","NumEscroete", "NumConnetablie", "RdV", "NumRente")
 
 #### Correction des unk_nodes ####
 df_uknCorr <- data.frame(
@@ -73,9 +76,13 @@ for (i in 1:nrow(df_uknCorr)) {
 
 df_add_rel <- data_frame(From= c("ROBIERT","TENEMENT DES MALADES"	,"DANIEL"	,"MARIIEN DE L'EVE","MARIIEN DE L'EVE","MARIEN"),
                          To= c("ROBIERT DE FIERIN",	"BAUDE L'ARTISIEN",	"JEHAN LE GIERMAIN",	"PIERON DE HASNON",	"MARIEN",	"MARGOT DE MAGNI"),
-                         NumEscroete = c("I1","I1","II1","II1","II1","II1")
+                         NumEscroete = c("I1","I1","II1","II1","II1","II1"),
+                         NumConnetablie = c("2°1","2°1","28°","32°","32°","32°"),
+                         RdV = c ("A","B","A",NA,NA,NA),
+                         NumRente = c("12.6","14.8","139.4","149.2","151.4","152.5")
                          )
-
+names(df_debiteur_rente) <- c("To","NumRente")
+df_debiteur_rente <- rbind(df_debiteur_rente,df_add_rel[,c(2,6)])
 
 
 df_links <- rbind(df_links,df_add_rel)
@@ -98,7 +105,7 @@ df_links <-  distinct(df_links)
 #### suppression des liens reciproques ####
 ret <- NULL
 for(i in 1:nrow(df_links)){
-  df_links[i,] <- c(df_links$To[i],df_links$From[i],df_links$NumEscroete[i])
+  df_links[i,] <- c(df_links$To[i],df_links$From[i],df_links$NumEscroete[i],df_links$NumConnetablie[i],df_links$RdV[i],df_links$NumRente[i])
   if(filter(df_links, From == df_links$From[i] & To == df_links$To[i]) %>% nrow() >1){
     ret <-  c(ret, i)
   }
