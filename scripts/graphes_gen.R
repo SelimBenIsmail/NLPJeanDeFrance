@@ -4,7 +4,7 @@ df_numEscroete_colors = data.frame(
   colors = c(brewer.pal(n = 8, name = 'Set1'),brewer.pal(n = 3, name = 'Set2'))
 )
 
-#### inclusion des couleurs dansdf_links ####
+#### inclusion des couleurs dans df_links ####
 if (length(df_links)<= 6) {
   df_links <- cbind(df_links,df_links$NumEscroete)
   names(df_links)[7] <- "Ecol"
@@ -28,7 +28,7 @@ E(g)$color <- df_links$Ecol
 plot(g, 
      layout=layout_nicely, 
      vertex.size=3 , 
-     vertex.label= ifelse(V(g)$name == "JEHAN DE FRANCHE",V(g)$name, NA),
+     vertex.label= ifelse(V(g)$name == "JEHAN DE FRANCHE" || V(g)$name == "JEHAN DE FRANCHE",V(g)$name, NA),
      vertex.label.cex=.6)
 title(main = "Graphes des relations mitoyennes extraient du rentier de Jean de France")
 

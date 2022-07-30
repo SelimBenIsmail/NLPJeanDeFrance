@@ -1,6 +1,5 @@
 load("./export/dataPostIgraph.RData")
 
-
 #### dataframe des attributs des sommets ####
 df_nodes = data.frame(Anthroponyme = V(g)$name)
 df_nodes <-  cbind(df_nodes,

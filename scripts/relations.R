@@ -3,7 +3,6 @@ load("./export/dataPostRen.RData")
 source("./scripts/functions_REN.R")
 #### Extraction des relations ####
 df_links = data.frame()
-#df_nodes = data.frame()
 df_debiteur_rente = data.frame()
 unknow_node <- 0 
 rentes <- df_main
@@ -36,15 +35,7 @@ for(i in 1:nrow(rentes)){
         unknow_node <-  unknow_node +1
       }
       df_debiteur_rente <- rbind(df_debiteur_rente,c(A[1],rentes$numRente[i]))
-#### probleme des rentes multiples pour un meme anthroponyme ####
-      # if (nrow(df_nodes)>0) {
-      #   if(nrow(df_nodes[df_nodes[,1]==A[1] & df_nodes[,5] != rentes$numRente[i],])>0){
-      #     A[1] <- str_c(A[1],"_",unknow_node)
-      #     unknow_node <-  unknow_node +1
-      #   }
-      # }
-      
-      #df_nodes <-  rbind(df_nodes,c(A[1],rentes$numEscroete[i],rentes$numConnetablie[i],rentes$rdv[i],rentes$numRente[i]))
+
       B <- ren_extract_caps(substring2)
       #### dataframe des aretes ####
       if (length(B)!=0) {
@@ -112,12 +103,4 @@ for(i in 1:nrow(df_links)){
 }
 df_links <- df_links[-ret,]
 df_links <- df_links[!is.na(df_links$From),]
-
-
-##### Run graphe ####
-#source("./scripts/graphes_gen.R")
-#### Export to gephi ####
-# export_gephi <-  df_links[1:3]
-# names(export_gephi) <- c("Source","Target","NumEscroete")
-# write.table(x=export_gephi, file="./export/export_gephi.csv", row.names = FALSE, sep=",")
 
