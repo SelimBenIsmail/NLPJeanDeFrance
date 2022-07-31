@@ -13,6 +13,22 @@ source("./scripts/functions_REN.R")
 #### Execution ####
 dataImported <- scan(file = "./sources/DossierFranceTXT.txt", what = "string")
 
+#### setting palette de couleurs ####
+myColors = c("#a93226",
+             "#2e4053",
+             "#d35400",
+             "#148f77",
+             "#1f618d",
+             "#6c3483",
+             "#a569bd",
+             "#808b96",
+             "#e74c3c",
+             "#3498db",
+             "#2ecc71",
+             "#F2F3F4"
+)
+
+
 source("./scripts/segmentation.R")
 source("./scripts/REN.R")
 source("./scripts/relations.R")

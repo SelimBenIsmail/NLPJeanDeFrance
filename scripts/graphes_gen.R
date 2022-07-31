@@ -4,6 +4,7 @@ df_numEscroete_colors = data.frame(
   colors = c(brewer.pal(n = 8, name = 'Set1'),brewer.pal(n = 3, name = 'Set2'))
 )
 
+
 #### inclusion des couleurs dans df_links ####
 if (length(df_links)<= 6) {
   df_links <- cbind(df_links,df_links$NumEscroete)
