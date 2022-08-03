@@ -1,16 +1,5 @@
 load("./export/dataPostIgraph.RData")
 #### loading libs ####
-require(ggmap)
-library(ggraph)
-library(igraph)
-library(dplyr)
-library(tidygeocoder)
-library(readxl)
-library(RColorBrewer)
-library(ggrepel)
-library(scales)
-library(ggforce)
-library(concaveman)
 
 #### Import ####
 nets <- read.csv("./sources/portes_nets.csv",header = TRUE, sep = ";")
@@ -35,7 +24,7 @@ for (i in c("En le rue Pepin","Ou Pont","En le rue Saint Piere", "En le rue des 
     j <- j+2
 }
 
-load("./export/dataPostGeoCode.Rdata")
+#load("./export/dataPostGeoCode.Rdata")
 
 #### df_conn_node from df_main ####
 df_conn_nodes <-  unique(df_main[c(4,3,1)])
@@ -92,8 +81,9 @@ ggmap(p, base_layer = ggraph(portes)) +
   geom_edge_link(aes(x = From_lng, y = From_lat, xend = To_lng, yend = To_lat ), color = 'red', width = 1) + #murs
   geom_node_point(data=df_conn_nodes, aes(lng, lat, fill = numConnetablie), colour= 'black', shape = 25, size = 2.5) + #connetablies
   geom_node_point(data = df_repere,aes(lng,lat), fill = '#7FB3D5', shape = 21, size= 3, color='black')+ #reperes
-  geom_text_repel(data=df_conn_nodes, aes(x=lng, y=lat, label = numConnetablie)) + #label connetablies
+  geom_text_repel(data=df_conn_nodes, aes(x=lng, y=lat, label = numConnetablie)) +  #label connetablies
   theme(legend.position = "none")
+
 
 #### map nb rente ####
 ggmap(p, base_layer = ggraph(portes)) +
