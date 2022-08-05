@@ -60,11 +60,11 @@ E(portes)$To_lng <- murs$To_lng
 #### data ####
 
 subset_nodes <-  df_nodes %>% 
-  filter(!is.na(NumRente)) %>% 
+  #filter(!is.na(NumRente)) %>% 
   select(Anthroponyme,NumConnetablie,NumRente)
 names(subset_nodes)[2] <- "numConnetablie"
-subset_nodes <-  inner_join(subset_nodes,df_conn_nodes, by = ("NumConnetablie" = "numConnetablie"))
-subset_nodes <-  na.omit(subset_nodes)
+subset_nodes <-  inner_join(subset_nodes,df_conn_nodes)
+#subset_nodes <-  na.omit(subset_nodes)
 
 
 
@@ -121,20 +121,43 @@ ggmap(p, base_layer = ggraph(portes)) +
   theme(legend.position = "none")
 
 #### map ploting anthroponyme ####
-personne_of_interest <- "BOINE ?BROKE"
-personne_of_interest <- subset_nodes$Anthroponyme[str_detect(subset_nodes$Anthroponyme, personne_of_interest) ]
 ggmap(p, base_layer = ggraph(portes)) +
   geom_point(aes(lng,lat), color = 'red', shape = 18, size= 5)+ #portes
   geom_edge_link(aes(x = From_lng, y = From_lat, xend = To_lng, yend = To_lat ), color = 'red', width = 1) + #murs
   geom_node_point(data=df_conn_nodes, aes(lng, lat, fill = numConnetablie), colour= 'black', shape = 25, size = 2.5) + #connetablies
   geom_node_point(data = df_repere,aes(lng,lat), fill = '#7FB3D5', shape = 21, size= 3, color='black')+ #reperes
-  #geom_text_repel(data=df_conn_nodes, aes(x=lng, y=lat, label = numConnetablie)) +  #label connetablies
-  geom_text_repel(data=subset_nodes, aes(x=lng, y=lat, label = Anthroponyme, 
-                                         color = ifelse(Anthroponyme %in% personne_of_interest,
-                                                        "#1F618D",
-                                                        "#17202A")),
+  geom_text_repel(data=subset_nodes, aes(x=lng, y=lat, label = Anthroponyme), 
                   size = 1.5, segment.size = 0.1,segment.alpha =  0.7) +  #label connetablies
   theme(legend.position = "none")
 
+
+#### map ploting anthroponyme focus ####
+`%!in%` <- Negate(`%in%`)
+personne_of_interest <- "(BOINE ?BROKE)|(DE FRANCHE)"
+personne_of_interest <- subset_nodes$Anthroponyme[str_detect(subset_nodes$Anthroponyme, personne_of_interest) ]
+ggmap(p, base_layer = ggraph(portes)) +
+  geom_point(aes(lng,lat), color = 'red', shape = 18, size= 5, alpha = 0.5)+ #portes
+  geom_edge_link(aes(x = From_lng, y = From_lat, xend = To_lng, yend = To_lat ), color = 'red', width = 1, alpha = 0.5) + #murs
+  geom_node_point(data=df_conn_nodes, aes(lng, lat, fill = numConnetablie), colour= 'black', shape = 25, size = 2.5, alpha = 0.5) + #connetablies
+  geom_node_point(data = df_repere,aes(lng,lat), fill = '#7FB3D5', shape = 21, size= 3, color='black', alpha = 0.5)+ #reperes
+  geom_text_repel(data=subset_nodes %>% filter(Anthroponyme %!in% personne_of_interest), 
+                  aes(x=lng, y=lat, label = Anthroponyme),
+                  size = 1.5, alpha =0.3, segment.size = 0.1,segment.alpha =  0.3) +  
+  geom_text_repel(data=subset_nodes %>% filter(Anthroponyme %in% personne_of_interest), 
+                  aes(x=lng, y=lat, label = Anthroponyme),
+                  size = 3, nudge_x = -0.004,nudge_y = 0.001, segment.size = 0.3,segment.alpha =  0.8, color = '#154360') + 
+  theme(legend.position = "none")
+
+
+#### map ploting rente ####
+ggmap(p, base_layer = ggraph(portes)) +
+  geom_point(aes(lng,lat), color = 'red', shape = 18, size= 5)+ #portes
+  geom_edge_link(aes(x = From_lng, y = From_lat, xend = To_lng, yend = To_lat ), color = 'red', width = 1) + #murs
+  geom_node_point(data=df_conn_nodes, aes(lng, lat, fill = numConnetablie), colour= 'black', shape = 25, size = 2.5) + #connetablies
+  geom_node_point(data = df_repere,aes(lng,lat), fill = '#7FB3D5', shape = 21, size= 3, color='black')+ #reperes
+  geom_text_repel(data=subset_nodes %>% filter(!is.na(NumRente)), 
+                  aes(x=lng, y=lat, label = NumRente), 
+                  size = 2, segment.size = 0.1,segment.alpha =  0.7) +  #label connetablies
+  theme(legend.position = "none")
 
 
