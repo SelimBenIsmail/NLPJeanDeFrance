@@ -63,8 +63,10 @@ subset_nodes <-  df_nodes %>%
   filter(!is.na(NumRente)) %>% 
   select(Anthroponyme,NumConnetablie,NumRente)
 names(subset_nodes)[2] <- "numConnetablie"
-
 subset_nodes <-  inner_join(subset_nodes,df_conn_nodes, by = ("NumConnetablie" = "numConnetablie"))
+subset_nodes <-  na.omit(subset_nodes)
+
+
 
 
 for (i in 1:nrow(df_conn_nodes)) {
@@ -118,7 +120,21 @@ ggmap(p, base_layer = ggraph(portes)) +
   geom_text_repel(data=df_conn_nodes, aes(x=lng, y=lat, label = numConnetablie),size = 2.5) +  #label connetablies
   theme(legend.position = "none")
 
-
+#### map ploting anthroponyme ####
+personne_of_interest <- "BOINE ?BROKE"
+personne_of_interest <- subset_nodes$Anthroponyme[str_detect(subset_nodes$Anthroponyme, personne_of_interest) ]
+ggmap(p, base_layer = ggraph(portes)) +
+  geom_point(aes(lng,lat), color = 'red', shape = 18, size= 5)+ #portes
+  geom_edge_link(aes(x = From_lng, y = From_lat, xend = To_lng, yend = To_lat ), color = 'red', width = 1) + #murs
+  geom_node_point(data=df_conn_nodes, aes(lng, lat, fill = numConnetablie), colour= 'black', shape = 25, size = 2.5) + #connetablies
+  geom_node_point(data = df_repere,aes(lng,lat), fill = '#7FB3D5', shape = 21, size= 3, color='black')+ #reperes
+  #geom_text_repel(data=df_conn_nodes, aes(x=lng, y=lat, label = numConnetablie)) +  #label connetablies
+  geom_text_repel(data=subset_nodes, aes(x=lng, y=lat, label = Anthroponyme, 
+                                         color = ifelse(Anthroponyme %in% personne_of_interest,
+                                                        "#1F618D",
+                                                        "#17202A")),
+                  size = 1.5, segment.size = 0.1,segment.alpha =  0.7) +  #label connetablies
+  theme(legend.position = "none")
 
 
 
