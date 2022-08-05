@@ -1,6 +1,6 @@
 #### settings ####
-load("./export/dataPostRen.RData")
 source("./scripts/functions_REN.R")
+
 #### Extraction des relations ####
 df_links = data.frame()
 df_debiteur_rente = data.frame()
@@ -40,7 +40,6 @@ for(i in 1:nrow(rentes)){
       #### dataframe des aretes ####
       if (length(B)!=0) {
         for(k in 1:length(B)){
-          
           df_links <- rbind(df_links, c(A[1],B[k],rentes$numEscroete[i],rentes$numConnetablie[i],rentes$rdv[i],rentes$numRente[i]))
         }
       } 
@@ -48,7 +47,6 @@ for(i in 1:nrow(rentes)){
   }
 }
 colnames(df_links) <- c("From", "To","NumEscroete","NumConnetablie", "RdV", "NumRente")
-#colnames(df_nodes) <- c("Anthroponyme","NumEscroete", "NumConnetablie", "RdV", "NumRente")
 
 #### Correction des unk_nodes ####
 df_uknCorr <- data.frame(
@@ -74,10 +72,7 @@ df_add_rel <- data_frame(From= c("ROBIERT","TENEMENT DES MALADES"	,"DANIEL"	,"MA
                          )
 names(df_debiteur_rente) <- c("To","NumRente")
 df_debiteur_rente <- rbind(df_debiteur_rente,df_add_rel[,c(2,6)])
-
-
 df_links <- rbind(df_links,df_add_rel)
-
 
 #### suppression des rentes qui point vers elle mêmes ####
 ret <- NULL

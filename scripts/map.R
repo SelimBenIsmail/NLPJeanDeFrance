@@ -1,6 +1,4 @@
 load("./export/dataPostIgraph.RData")
-#### loading libs ####
-
 #### Import ####
 nets <- read.csv("./sources/portes_nets.csv",header = TRUE, sep = ";")
 nodes <- read.csv("./sources/portes_nodes.csv",header = TRUE, sep = ";")
@@ -23,8 +21,6 @@ for (i in c("En le rue Pepin","Ou Pont","En le rue Saint Piere", "En le rue des 
   geo_conn$lng[geo_conn$connetablie == i] <- corr[j+1]
     j <- j+2
 }
-
-#load("./export/dataPostGeoCode.Rdata")
 
 #### df_conn_node from df_main ####
 df_conn_nodes <-  unique(df_main[c(4,3,1)])
@@ -62,6 +58,15 @@ E(portes)$To_lng <- murs$To_lng
 
 
 #### data ####
+
+subset_nodes <-  df_nodes %>% 
+  filter(!is.na(NumRente)) %>% 
+  select(Anthroponyme,NumConnetablie,NumRente)
+names(subset_nodes)[2] <- "numConnetablie"
+
+subset_nodes <-  inner_join(subset_nodes,df_conn_nodes, by = ("NumConnetablie" = "numConnetablie"))
+
+
 for (i in 1:nrow(df_conn_nodes)) {
   df_conn_nodes$numEscroete[i] <- df_conn_nodes$numEscroete[i] %>% 
     str_extract("[IV]+")
@@ -73,7 +78,6 @@ noms_escroetes <- data.frame(
   escroete =c("Markiet","Canteleu","Més","Wés","Nuevile","Deuwioel","Escroete VII"))
 df_conn_nodes <- merge(df_conn_nodes,noms_escroetes)
 df_conn_nodes <- na.omit(df_conn_nodes)
-
 
 #### map ploting  connetablie simple ####
 ggmap(p, base_layer = ggraph(portes)) +
@@ -113,3 +117,8 @@ ggmap(p, base_layer = ggraph(portes)) +
   geom_node_point(data = df_repere,aes(lng,lat), fill = '#7FB3D5', shape = 21, size= 3, color='black') + #reperes
   geom_text_repel(data=df_conn_nodes, aes(x=lng, y=lat, label = numConnetablie),size = 2.5) +  #label connetablies
   theme(legend.position = "none")
+
+
+
+
+

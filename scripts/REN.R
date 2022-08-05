@@ -17,11 +17,11 @@ df_main$rente <- caps
 l_anthroponymes <- str_to_upper(l_anthroponymes)
 
 #### calcul de distance ####
-#m_distance <- myDamereauLevenstheinDist(l_anthroponymes)
+m_distance <- myDamereauLevenstheinDist(l_anthroponymes)
 
 #### clustering ####
-#l_cluster <- myClustering(l_anthroponymes,clustering_lim=3,m_distance)
-load("./export/l_cluster_corr.RData")
+l_cluster <- myClustering(l_anthroponymes,clustering_lim=3,m_distance)
+#load("./export/l_cluster_corr.RData")
 
 #### Remplacement des variants ####
 for(i in 1:length(df_main$rente)){
